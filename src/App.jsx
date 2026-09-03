@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
+import MobileBottomNav from './components/MobileBottomNav';
+import MobileDrawer from './components/MobileDrawer';
 import TransactionModal from './components/TransactionModal';
 import EditTransactionModal from './components/EditTransactionModal';
 import EditIncomeSourceModal from './components/EditIncomeSourceModal';
@@ -17,7 +19,6 @@ import {
   fetchAllData,
   fetchAnalytics,
   syncTHS,
-  cleanWipeData,
   createTransaction,
   updateTransaction,
   deleteTransaction,
@@ -36,6 +37,7 @@ export default function App() {
   const [currentTab, setCurrentTab] = useState('dashboard');
   const [selectedMonth, setSelectedMonth] = useState(9); // Mặc định Tháng 9
   const [selectedYear, setSelectedYear] = useState(2026); // Năm 2026
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const [data, setData] = useState({
     incomeSources: [],
@@ -163,7 +165,7 @@ export default function App() {
 
   return (
     <div className="flex h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
-      {/* Sidebar */}
+      {/* Desktop Sidebar */}
       <Sidebar
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
@@ -172,8 +174,8 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Navbar with Month Selector */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+        {/* Navbar with Month Selector & Mobile Menu trigger */}
         <Navbar
           summary={analytics.summary}
           selectedMonth={selectedMonth}
@@ -181,11 +183,12 @@ export default function App() {
           onChangeMonth={handleChangeMonth}
           onOpenNewTx={() => setIsNewTxOpen(true)}
           onRefresh={() => loadAll(selectedMonth, selectedYear)}
+          onOpenDrawer={() => setIsDrawerOpen(true)}
           isLoading={isLoading}
         />
 
-        {/* Dynamic Page Views */}
-        <main className="flex-1 overflow-y-auto px-6 py-6 scroll-smooth">
+        {/* Dynamic Page Views with safe mobile padding */}
+        <main className="flex-1 overflow-y-auto px-3 py-4 md:px-6 md:py-6 pb-24 md:pb-8 scroll-smooth">
           <div className="max-w-7xl mx-auto">
             {currentTab === 'dashboard' && (
               <DashboardPage
@@ -269,7 +272,25 @@ export default function App() {
             )}
           </div>
         </main>
+
+        {/* Mobile Bottom Navigation Bar */}
+        <MobileBottomNav
+          currentTab={currentTab}
+          setCurrentTab={setCurrentTab}
+          onOpenNewTx={() => setIsNewTxOpen(true)}
+          onOpenDrawer={() => setIsDrawerOpen(true)}
+        />
       </div>
+
+      {/* Mobile Slide-out Drawer */}
+      <MobileDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        currentTab={currentTab}
+        setCurrentTab={setCurrentTab}
+        incomeSources={data.incomeSources}
+        onOpenNewTx={() => setIsNewTxOpen(true)}
+      />
 
       {/* Transaction Modals */}
       <TransactionModal

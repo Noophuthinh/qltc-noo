@@ -24,7 +24,7 @@ export default function Sidebar({ currentTab, setCurrentTab, onOpenNewTx, income
   ];
 
   return (
-    <aside className="w-64 bg-slate-900/90 border-r border-slate-800 flex flex-col shrink-0 min-h-screen">
+    <aside className="hidden md:flex w-64 bg-slate-900/90 border-r border-slate-800 flex-col shrink-0 min-h-screen">
       {/* Brand Header */}
       <div className="p-5 border-b border-slate-800/80 flex items-center justify-between">
         <div className="flex items-center space-x-3">
