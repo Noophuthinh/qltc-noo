@@ -1,0 +1,2110 @@
+{
+  "incomeSources": [
+    {
+      "id": "inc-1",
+      "name": "Lương hàng tháng",
+      "category": "Lương cố định",
+      "color": "#10b981",
+      "icon": "Briefcase",
+      "description": "Thu nhập từ tiền lương công việc chính",
+      "monthlyTarget": 18000000,
+      "createdAt": "2026-01-01"
+    },
+    {
+      "id": "inc-2",
+      "name": "Quỹ Đầu tư THS",
+      "category": "Đầu tư tài chính",
+      "color": "#6366f1",
+      "icon": "TrendingUp",
+      "description": "Lợi nhuận, dòng tiền định kỳ từ Quỹ Đầu tư THS",
+      "monthlyTarget": 12000000,
+      "createdAt": "2026-01-01"
+    },
+    {
+      "id": "inc-3",
+      "name": "Quỹ Đầu tư Thành 7",
+      "category": "Đầu tư tài chính",
+      "color": "#f59e0b",
+      "icon": "Coins",
+      "description": "Lợi nhuận, dòng tiền định kỳ từ Quỹ Đầu tư Thành 7",
+      "monthlyTarget": 8000000,
+      "createdAt": "2026-01-01"
+    },
+    {
+      "id": "inc-4",
+      "name": "Không xác định",
+      "category": "Nguồn khác",
+      "color": "#94a3b8",
+      "icon": "HelpCircle",
+      "description": "Các khoản thu nhập vãng lai, thưởng phụ chưa phân loại",
+      "monthlyTarget": 13000000,
+      "createdAt": "2026-01-01"
+    }
+  ],
+  "expenseCategories": [
+    {
+      "id": "exp-1",
+      "name": "Ăn uống & Cà phê",
+      "icon": "Utensils",
+      "color": "#ef4444"
+    },
+    {
+      "id": "exp-2",
+      "name": "Nhà cửa & Hóa đơn",
+      "icon": "Home",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "exp-3",
+      "name": "Đi lại & Xăng xe",
+      "icon": "Car",
+      "color": "#f97316"
+    },
+    {
+      "id": "exp-4",
+      "name": "Mua sắm & Tiêu dùng",
+      "icon": "ShoppingBag",
+      "color": "#ec4899"
+    },
+    {
+      "id": "exp-5",
+      "name": "Giải trí & Du lịch",
+      "icon": "Gamepad2",
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "exp-6",
+      "name": "Sức khỏe & Y tế",
+      "icon": "HeartPulse",
+      "color": "#14b8a6"
+    },
+    {
+      "id": "exp-7",
+      "name": "Học tập & Kỹ năng",
+      "icon": "GraduationCap",
+      "color": "#06b6d4"
+    },
+    {
+      "id": "exp-8",
+      "name": "Gia đình & Bạn bè",
+      "icon": "Users",
+      "color": "#a855f7"
+    },
+    {
+      "id": "exp-9",
+      "name": "Chi phí khác",
+      "icon": "MoreHorizontal",
+      "color": "#64748b"
+    }
+  ],
+  "wallets": [
+    {
+      "id": "wal-1",
+      "name": "Tài khoản Ngân hàng (Chính)",
+      "type": "bank",
+      "balance": 17720000,
+      "icon": "Building2",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "wal-2",
+      "name": "Ví Tiền mặt",
+      "type": "cash",
+      "balance": 0,
+      "icon": "Wallet",
+      "color": "#10b981"
+    },
+    {
+      "id": "wal-3",
+      "name": "Ví Điện tử (Momo / ZaloPay)",
+      "type": "ewallet",
+      "balance": 0,
+      "icon": "Smartphone",
+      "color": "#ec4899"
+    },
+    {
+      "id": "wal-4",
+      "name": "Tài khoản Quỹ Đầu tư",
+      "type": "investment",
+      "balance": 84801182,
+      "icon": "TrendingUp",
+      "color": "#6366f1"
+    }
+  ],
+  "budgets": [
+    {
+      "id": "bud-1",
+      "categoryId": "exp-1",
+      "categoryName": "Ăn uống & Cà phê",
+      "amount": 6000000,
+      "period": "month"
+    },
+    {
+      "id": "bud-2",
+      "categoryId": "exp-2",
+      "categoryName": "Nhà cửa & Hóa đơn",
+      "amount": 5000000,
+      "period": "month"
+    },
+    {
+      "id": "bud-3",
+      "categoryId": "exp-3",
+      "categoryName": "Đi lại & Xăng xe",
+      "amount": 2000000,
+      "period": "month"
+    },
+    {
+      "id": "bud-4",
+      "categoryId": "exp-4",
+      "categoryName": "Mua sắm & Tiêu dùng",
+      "amount": 4000000,
+      "period": "month"
+    },
+    {
+      "id": "bud-5",
+      "categoryId": "exp-5",
+      "categoryName": "Giải trí & Du lịch",
+      "amount": 3000000,
+      "period": "month"
+    }
+  ],
+  "savingsGoals": [
+    {
+      "id": "goal-1",
+      "title": "Quỹ Khẩn cấp 6 tháng",
+      "targetAmount": 60000000,
+      "currentAmount": 0,
+      "deadline": "2026-12-31",
+      "color": "#10b981"
+    },
+    {
+      "id": "goal-2",
+      "title": "Nâng cấp Macbook Pro",
+      "targetAmount": 45000000,
+      "currentAmount": 0,
+      "deadline": "2026-11-15",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "goal-3",
+      "title": "Tái đầu tư Quỹ THS & Thành 7",
+      "targetAmount": 100000000,
+      "currentAmount": 0,
+      "deadline": "2027-01-01",
+      "color": "#8b5cf6"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "tx-1788425574069-yntvi",
+      "createdAt": "2026-09-03T08:52:54.069Z",
+      "type": "expense",
+      "amount": 280000,
+      "walletId": "wal-1",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "date": "2026-09-03T08:52:00.000Z",
+      "note": "Chi mua vé bus",
+      "categoryId": "exp-3",
+      "categoryName": "Đi lại & Xăng xe"
+    },
+    {
+      "id": "tx-1788425439263-myf7j",
+      "createdAt": "2026-09-03T08:50:39.263Z",
+      "type": "income",
+      "amount": 18000000,
+      "walletId": "wal-1",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "date": "2026-09-03T08:50:00.000Z",
+      "note": "",
+      "incomeSourceId": "inc-1",
+      "incomeSourceName": "Lương hàng tháng",
+      "category": "Lương cố định"
+    },
+    {
+      "id": "tx-ths-sync-tháng-8-2026",
+      "type": "income",
+      "amount": 11516551,
+      "incomeSourceId": "inc-2",
+      "incomeSourceName": "Quỹ Đầu tư THS",
+      "category": "Đầu tư tài chính (Đồng hồ Chrono)",
+      "walletId": "wal-4",
+      "walletName": "Tài khoản Quỹ Đầu tư",
+      "date": "2026-08-28T03:00:00.000Z",
+      "note": "Lợi nhuận cổ đông Thịnh (42.86%) - Tháng 8 2026 [THS Chrono Online]",
+      "isTHSAutoSync": true,
+      "thsDetails": {
+        "month": "Tháng 8 2026",
+        "revenue": 233788825,
+        "profit": 36383825,
+        "ceoSalary": 9513664.75,
+        "salesCount": 10
+      },
+      "createdAt": "2026-08-28T03:00:00.000Z"
+    },
+    {
+      "id": "tx-ths-sync-tháng-7-2026",
+      "type": "income",
+      "amount": 11574522,
+      "incomeSourceId": "inc-2",
+      "incomeSourceName": "Quỹ Đầu tư THS",
+      "category": "Đầu tư tài chính (Đồng hồ Chrono)",
+      "walletId": "wal-4",
+      "walletName": "Tài khoản Quỹ Đầu tư",
+      "date": "2026-07-28T03:00:00.000Z",
+      "note": "Lợi nhuận cổ đông Thịnh (42.86%) - Tháng 7 2026 [THS Chrono Online]",
+      "isTHSAutoSync": true,
+      "thsDetails": {
+        "month": "Tháng 7 2026",
+        "revenue": 209160225,
+        "profit": 35780225,
+        "ceoSalary": 8774806.75,
+        "salesCount": 9
+      },
+      "createdAt": "2026-07-28T03:00:00.000Z"
+    },
+    {
+      "id": "tx-ths-sync-tháng-6-2026",
+      "type": "income",
+      "amount": 14455246,
+      "incomeSourceId": "inc-2",
+      "incomeSourceName": "Quỹ Đầu tư THS",
+      "category": "Đầu tư tài chính (Đồng hồ Chrono)",
+      "walletId": "wal-4",
+      "walletName": "Tài khoản Quỹ Đầu tư",
+      "date": "2026-06-28T03:00:00.000Z",
+      "note": "Lợi nhuận cổ đông Thịnh (42.86%) - Tháng 6 2026 [THS Chrono Online]",
+      "isTHSAutoSync": true,
+      "thsDetails": {
+        "month": "Tháng 6 2026",
+        "revenue": 308689750,
+        "profit": 48574250,
+        "ceoSalary": 14847590,
+        "salesCount": 16
+      },
+      "createdAt": "2026-06-28T03:00:00.000Z"
+    },
+    {
+      "id": "tx-ths-sync-tháng-5-2026",
+      "type": "income",
+      "amount": 13727124,
+      "incomeSourceId": "inc-2",
+      "incomeSourceName": "Quỹ Đầu tư THS",
+      "category": "Đầu tư tài chính (Đồng hồ Chrono)",
+      "walletId": "wal-4",
+      "walletName": "Tài khoản Quỹ Đầu tư",
+      "date": "2026-05-28T03:00:00.000Z",
+      "note": "Lợi nhuận cổ đông Thịnh (42.86%) - Tháng 5 2026 [THS Chrono Online]",
+      "isTHSAutoSync": true,
+      "thsDetails": {
+        "month": "Tháng 5 2026",
+        "revenue": 249645175,
+        "profit": 42017175,
+        "ceoSalary": 9989355.25,
+        "salesCount": 11
+      },
+      "createdAt": "2026-05-28T03:00:00.000Z"
+    },
+    {
+      "id": "tx-ths-sync-tháng-4-2026",
+      "type": "income",
+      "amount": 20487143,
+      "incomeSourceId": "inc-2",
+      "incomeSourceName": "Quỹ Đầu tư THS",
+      "category": "Đầu tư tài chính (Đồng hồ Chrono)",
+      "walletId": "wal-4",
+      "walletName": "Tài khoản Quỹ Đầu tư",
+      "date": "2026-04-28T03:00:00.000Z",
+      "note": "Lợi nhuận cổ đông Thịnh (42.86%) - Tháng 4 2026 [THS Chrono Online]",
+      "isTHSAutoSync": true,
+      "thsDetails": {
+        "month": "Tháng 4 2026",
+        "revenue": 310219945,
+        "profit": 62708945,
+        "ceoSalary": 14908797.8,
+        "salesCount": 17
+      },
+      "createdAt": "2026-04-28T03:00:00.000Z"
+    },
+    {
+      "id": "tx-ths-sync-tháng-3-2026",
+      "type": "income",
+      "amount": 13040596,
+      "incomeSourceId": "inc-2",
+      "incomeSourceName": "Quỹ Đầu tư THS",
+      "category": "Đầu tư tài chính (Đồng hồ Chrono)",
+      "walletId": "wal-4",
+      "walletName": "Tài khoản Quỹ Đầu tư",
+      "date": "2026-03-28T03:00:00.000Z",
+      "note": "Lợi nhuận cổ đông Thịnh (42.86%) - Tháng 3 2026 [THS Chrono Online]",
+      "isTHSAutoSync": true,
+      "thsDetails": {
+        "month": "Tháng 3 2026",
+        "revenue": 205499000,
+        "profit": 39091000,
+        "ceoSalary": 8664970,
+        "salesCount": 10
+      },
+      "createdAt": "2026-03-28T03:00:00.000Z"
+    }
+  ],
+  "settings": {
+    "currency": "VND",
+    "currencySymbol": "₫",
+    "theme": "dark",
+    "userName": "Noo",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256"
+  },
+  "thsData": {
+    "lastSync": "2026-09-03T08:40:09.091Z",
+    "totalProfitThinh": 84801182,
+    "monthlyReports": {
+      "Tháng 8 2026": {
+        "sales": [
+          {
+            "stt": 1,
+            "name": "Omega 166,011 w paper",
+            "cost_usd": 681.7460317,
+            "sale_usd": 990,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 193.2539683,
+            "status": "chuyển pp Thịnh",
+            "sale_vnd": 22217000,
+            "profit_vnd": 5037000
+          },
+          {
+            "stt": 2,
+            "name": "Omega 168,017 brick",
+            "cost_usd": 811.5079365,
+            "sale_usd": 1085,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 158.4920635,
+            "status": "chuyển tm",
+            "sale_vnd": 24588000,
+            "profit_vnd": 4138000
+          },
+          {
+            "stt": 3,
+            "name": "Longines Conquest 9020 black dial",
+            "cost_usd": 436.5079365,
+            "sale_usd": 650,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 98.49206349,
+            "status": "chuyển pp Thịnh",
+            "sale_vnd": 13432000,
+            "profit_vnd": 2432000
+          },
+          {
+            "stt": 4,
+            "name": "Omega 168,0057 GC",
+            "cost_usd": 898.8095238,
+            "sale_usd": 1145,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 131.1904762,
+            "status": "chuyển pp T",
+            "sale_vnd": 26064150,
+            "profit_vnd": 3414150
+          },
+          {
+            "stt": 5,
+            "name": "Omega 168,0061",
+            "cost_usd": 837.3015873,
+            "sale_usd": 1100,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 147.6984127,
+            "status": "chuyển tm",
+            "sale_vnd": 24925425,
+            "profit_vnd": 3825425
+          },
+          {
+            "stt": 6,
+            "name": "Omega BOR 1036/11",
+            "cost_usd": 178.5714286,
+            "sale_usd": 200,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "profit_usd": 21.42857143,
+            "status": "chuyển tm",
+            "sale_vnd": 5061000,
+            "profit_vnd": 561000
+          },
+          {
+            "stt": 7,
+            "name": "Omega 168,023 sparkle",
+            "cost_usd": 691.468254,
+            "sale_usd": 935,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 128.531746,
+            "status": "chuyển pp Thịnh",
+            "sale_vnd": 20660000,
+            "profit_vnd": 3235000
+          },
+          {
+            "stt": 8,
+            "name": "Omega 168,0065 BOR",
+            "cost_usd": 1521.825397,
+            "sale_usd": 1900,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 263.1746032,
+            "status": "chuyển tm",
+            "sale_vnd": 44982000,
+            "profit_vnd": 6632000
+          },
+          {
+            "stt": 9,
+            "name": "Omega 168,029 brick",
+            "cost_usd": 1121.031746,
+            "sale_usd": 1300,
+            "ship_usd": 55,
+            "customs_usd": 0,
+            "profit_usd": 123.968254,
+            "status": "chuyển tm",
+            "sale_vnd": 31436250,
+            "profit_vnd": 3186250
+          },
+          {
+            "stt": 10,
+            "name": "Omega 166,067 +  bracelet",
+            "cost_usd": 654.7619048,
+            "sale_usd": 925,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 155.2380952,
+            "status": "chuyển pp Thịnh",
+            "sale_vnd": 20423000,
+            "profit_vnd": 3923000
+          }
+        ],
+        "purchases": [
+          {
+            "stt": 1,
+            "name": "Omega 166,010",
+            "cost_usd": 744.047619,
+            "expected_sale_usd": 950,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 90.95238095
+          },
+          {
+            "stt": 2,
+            "name": "Omega 168,029 brick",
+            "cost_usd": 1121.031746,
+            "expected_sale_usd": 1390,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 153.968254
+          },
+          {
+            "stt": 3,
+            "name": "Omega 166,067 +  bracelet",
+            "cost_usd": 654.7619048,
+            "expected_sale_usd": 850,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 80.23809524
+          },
+          {
+            "stt": 4,
+            "name": "Omega 168,0056 SS",
+            "cost_usd": 626.5873016,
+            "expected_sale_usd": 850,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 108.4126984
+          },
+          {
+            "stt": 5,
+            "name": "Omega 168,0065 piepan",
+            "cost_usd": 1533.730159,
+            "expected_sale_usd": 1850,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 201.2698413
+          },
+          {
+            "stt": 6,
+            "name": "Omega 168,0061 bor",
+            "cost_usd": 883.4126984,
+            "expected_sale_usd": 1250,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 251.5873016
+          },
+          {
+            "stt": 7,
+            "name": "Omega 165,067 sparkle GC",
+            "cost_usd": 847.6190476,
+            "expected_sale_usd": 1150,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 187.3809524
+          }
+        ],
+        "summary": {
+          "revenue": 233788825,
+          "profit": 36383825,
+          "ceo_salary": 9513664.75,
+          "hieu_share": 11516550.68,
+          "thinh_share": 11516550.68,
+          "son_share": 3839745.9
+        },
+        "target_sales": 350000000,
+        "target_imports": 450000000,
+        "actual_sales": 233788825,
+        "actual_imports": 178942000
+      },
+      "Tháng 7 2026": {
+        "sales": [
+          {
+            "stt": 1,
+            "name": "Omega 168,024",
+            "cost_usd": 941.1904762,
+            "sale_usd": 1235,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 178.8095238,
+            "status": "chuyển tm",
+            "sale_vnd": 29337000,
+            "profit_vnd": 5619000
+          },
+          {
+            "stt": 2,
+            "name": "Omega 7912/4 flatlink bracelet",
+            "cost_usd": 616.6666667,
+            "sale_usd": 815,
+            "ship_usd": 55,
+            "customs_usd": 0,
+            "profit_usd": 143.3333333,
+            "status": "chuyển tm",
+            "sale_vnd": 19342000,
+            "profit_vnd": 3802000
+          },
+          {
+            "stt": 3,
+            "name": "Omega SMDV 14910 BOR",
+            "cost_usd": 789.6825397,
+            "sale_usd": 965,
+            "ship_usd": 70,
+            "customs_usd": 0,
+            "profit_usd": 105.3174603,
+            "status": "chuyển tm",
+            "sale_vnd": 22777750,
+            "profit_vnd": 3227750
+          },
+          {
+            "stt": 4,
+            "name": "Omega 166,010 BOR thin scalloped",
+            "cost_usd": 942.8571429,
+            "sale_usd": 1235,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 177.1428571,
+            "status": "chuyển pp T",
+            "sale_vnd": 28504000,
+            "profit_vnd": 4744000
+          },
+          {
+            "stt": 5,
+            "name": "Omega 1035 bracelet",
+            "cost_usd": 357.1428571,
+            "sale_usd": 550,
+            "ship_usd": 55,
+            "customs_usd": 0,
+            "profit_usd": 137.8571429,
+            "status": "chuyển tm",
+            "sale_vnd": 12597750,
+            "profit_vnd": 3597750
+          },
+          {
+            "stt": 6,
+            "name": "Omega 166,010 BOR",
+            "cost_usd": 775.7936508,
+            "sale_usd": 1050,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 159.2063492,
+            "status": "chuyển tm",
+            "sale_vnd": 23800425,
+            "profit_vnd": 4250425
+          },
+          {
+            "stt": 7,
+            "name": "Ulysse Nardin 36000",
+            "cost_usd": 1003.769841,
+            "sale_usd": 1215,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 96.23015873,
+            "status": "chuyển tm",
+            "sale_vnd": 28000500,
+            "profit_vnd": 2705500
+          },
+          {
+            "stt": 8,
+            "name": "Omega 168,0057 blue + brick bracelet",
+            "cost_usd": 909.0079365,
+            "sale_usd": 1205,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 180.9920635,
+            "status": "chuyển tm",
+            "sale_vnd": 27745950,
+            "profit_vnd": 4838950
+          },
+          {
+            "stt": 9,
+            "name": "Omega 166,0117 BOR",
+            "cost_usd": 557.9365079,
+            "sale_usd": 785,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 112.0634921,
+            "status": "chuyển tm",
+            "sale_vnd": 17054850,
+            "profit_vnd": 2994850
+          }
+        ],
+        "purchases": [
+          {
+            "stt": 1,
+            "name": "Omega 168,022",
+            "cost_usd": 653.0952381,
+            "expected_sale_usd": 950,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 181.9047619
+          },
+          {
+            "stt": 2,
+            "name": "Omega 166,020 BOR",
+            "cost_usd": 662.6984127,
+            "expected_sale_usd": 880,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 102.3015873
+          },
+          {
+            "stt": 3,
+            "name": "Omega 168,0056 SS + brick",
+            "cost_usd": 793.6507937,
+            "expected_sale_usd": 1050,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 141.3492063
+          },
+          {
+            "stt": 4,
+            "name": "Omega 168,865 GP + mesh",
+            "cost_usd": 796.8253968,
+            "expected_sale_usd": 1050,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 138.1746032
+          },
+          {
+            "stt": 5,
+            "name": "Omega 168,005 piepan",
+            "cost_usd": 1581.349206,
+            "expected_sale_usd": 1950,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 253.6507937
+          },
+          {
+            "stt": 6,
+            "name": "Omega 14762 +",
+            "cost_usd": 632.9365079,
+            "expected_sale_usd": 880,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 132.0634921
+          },
+          {
+            "stt": 7,
+            "name": "Omega 168,023 sparkle",
+            "cost_usd": 691.468254,
+            "expected_sale_usd": 950,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 143.531746
+          },
+          {
+            "stt": 8,
+            "name": "Omega 168,0065 BOR",
+            "cost_usd": 1521.825397,
+            "expected_sale_usd": 1900,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 263.1746032
+          },
+          {
+            "stt": 9,
+            "name": "Omega 14762 SS",
+            "cost_usd": 689.6825397,
+            "expected_sale_usd": 950,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 145.3174603
+          }
+        ],
+        "summary": {
+          "revenue": 209160225,
+          "profit": 35780225,
+          "ceo_salary": 8774806.75,
+          "hieu_share": 11574522.26,
+          "thinh_share": 11574522.26,
+          "son_share": 3859074.268
+        },
+        "target_sales": 200000,
+        "target_imports": 250000,
+        "actual_sales": 209160225,
+        "actual_imports": 184813000
+      },
+      "Tháng 6 2026": {
+        "sales": [
+          {
+            "stt": 1,
+            "name": "Omega 166,0161 w Paper",
+            "cost_usd": 522.8174603,
+            "sale_usd": 678,
+            "ship_usd": 60,
+            "customs_usd": 0,
+            "profit_usd": 95.18253968,
+            "status": "chuyển tm",
+            "sale_vnd": 15882600,
+            "profit_vnd": 2707600
+          },
+          {
+            "stt": 2,
+            "name": "Omega 166.026",
+            "cost_usd": 663.0952381,
+            "sale_usd": 820,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 41.9047619,
+            "status": "chuyển pp",
+            "sale_vnd": 17871750,
+            "profit_vnd": 1161750
+          },
+          {
+            "stt": 3,
+            "name": "Omega 1098/526 bracelet",
+            "cost_usd": 178.5714286,
+            "sale_usd": 180,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "profit_usd": 1.428571429,
+            "status": "chuyển pp",
+            "sale_vnd": 4563000,
+            "profit_vnd": 63000
+          },
+          {
+            "stt": 4,
+            "name": "Omega 166,003 GC",
+            "cost_usd": 859.3253968,
+            "sale_usd": 975,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 0.6746031746,
+            "status": "chuyển pp",
+            "sale_vnd": 21844000,
+            "profit_vnd": 189000
+          },
+          {
+            "stt": 5,
+            "name": "Omega 1037/570 bracelet",
+            "cost_usd": 154.7619048,
+            "sale_usd": 180,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "profit_usd": 25.23809524,
+            "status": "chuyển pp",
+            "sale_vnd": 4572000,
+            "profit_vnd": 672000
+          },
+          {
+            "stt": 6,
+            "name": "Omega 168,0057 GC",
+            "cost_usd": 851.1904762,
+            "sale_usd": 1145,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 178.8095238,
+            "status": "chuyển pp",
+            "sale_vnd": 26162000,
+            "profit_vnd": 4712000
+          },
+          {
+            "stt": 7,
+            "name": "Omega 168,0056 GC",
+            "cost_usd": 724.2063492,
+            "sale_usd": 1050,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 210.7936508,
+            "status": "chuyển pp",
+            "sale_vnd": 23749000,
+            "profit_vnd": 5499000
+          },
+          {
+            "stt": 8,
+            "name": "GP brick bracelet",
+            "cost_usd": 198.4126984,
+            "sale_usd": 250,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "profit_usd": 51.58730159,
+            "status": "chuyển pp",
+            "sale_vnd": 6350000,
+            "profit_vnd": 1350000
+          },
+          {
+            "stt": 9,
+            "name": "Omega 168.004/564",
+            "cost_usd": 476.1904762,
+            "sale_usd": 675,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 83.80952381,
+            "status": "chuyển pp",
+            "sale_vnd": 14224000,
+            "profit_vnd": 2224000
+          },
+          {
+            "stt": 10,
+            "name": "Omega 168,017 Box &Paper",
+            "cost_usd": 1236.72619,
+            "sale_usd": 1375,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 23.27380952,
+            "status": "chuyển pp",
+            "sale_vnd": 31878000,
+            "profit_vnd": 712500
+          },
+          {
+            "stt": 11,
+            "name": "Omega Seamaster De Ville 135,010",
+            "cost_usd": 494.047619,
+            "sale_usd": 750,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 140.952381,
+            "status": "chuyển pp",
+            "sale_vnd": 16097250,
+            "profit_vnd": 3647250
+          },
+          {
+            "stt": 12,
+            "name": "Longines 8353 twotone + bracelet",
+            "cost_usd": 528.1746032,
+            "sale_usd": 830,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 186.8253968,
+            "status": "chuyển pp",
+            "sale_vnd": 18125250,
+            "profit_vnd": 4815250
+          },
+          {
+            "stt": 13,
+            "name": "Omega 168,0065",
+            "cost_usd": 1391.468254,
+            "sale_usd": 1770,
+            "ship_usd": 50,
+            "customs_usd": 0,
+            "profit_usd": 328.531746,
+            "status": "chuyển tm",
+            "sale_vnd": 43602000,
+            "profit_vnd": 8537000
+          },
+          {
+            "stt": 14,
+            "name": "Omega 168,029 linen flute",
+            "cost_usd": 1124.007937,
+            "sale_usd": 1400,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 160.9920635,
+            "status": "chuyển pp",
+            "sale_vnd": 32645425,
+            "profit_vnd": 4320425
+          },
+          {
+            "stt": 15,
+            "name": "Omega mesh 2058",
+            "cost_usd": 49.20634921,
+            "sale_usd": 50,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "profit_usd": 0.7936507937,
+            "status": "chuyển pp",
+            "sale_vnd": 1270250,
+            "profit_vnd": 30250
+          },
+          {
+            "stt": 16,
+            "name": "Omega 168,057 grey",
+            "cost_usd": 869.8412698,
+            "sale_usd": 1290,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 305.1587302,
+            "status": "chuyển pp",
+            "sale_vnd": 29853225,
+            "profit_vnd": 7933225
+          }
+        ],
+        "purchases": [
+          {
+            "stt": 1,
+            "name": "Omega 168,0065",
+            "cost_usd": 1391.468254,
+            "expected_sale_usd": 1900,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 393.531746
+          },
+          {
+            "stt": 2,
+            "name": "Omega 166,010 BOR thin scalloped",
+            "cost_usd": 942.8571429,
+            "expected_sale_usd": 1280,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 222.1428571
+          },
+          {
+            "stt": 3,
+            "name": "Omega SMDV 166,020",
+            "cost_usd": 525.7936508,
+            "expected_sale_usd": 800,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 159.2063492
+          },
+          {
+            "stt": 4,
+            "name": "Omega 166,011 w paper",
+            "cost_usd": 681.7460317,
+            "expected_sale_usd": 950,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 153.2539683
+          },
+          {
+            "stt": 5,
+            "name": "Omega 166,0117 BOR",
+            "cost_usd": 557.9365079,
+            "expected_sale_usd": 780,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 107.0634921
+          },
+          {
+            "stt": 6,
+            "name": "Omega 166,033/565",
+            "cost_usd": 382.9365079,
+            "expected_sale_usd": 680,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 182.0634921
+          },
+          {
+            "stt": 7,
+            "name": "Omega 168,0057 GC",
+            "cost_usd": 898.8095238,
+            "expected_sale_usd": 1250,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 236.1904762
+          },
+          {
+            "stt": 8,
+            "name": "Omega 198,0126 QZ",
+            "cost_usd": 387.3015873,
+            "expected_sale_usd": 580,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 127.6984127
+          },
+          {
+            "stt": 9,
+            "name": "Omega 166,011",
+            "cost_usd": 589.2857143,
+            "expected_sale_usd": 850,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 145.7142857
+          },
+          {
+            "stt": 10,
+            "name": "Omega 168,0061",
+            "cost_usd": 837.3015873,
+            "expected_sale_usd": 1080,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 127.6984127
+          },
+          {
+            "stt": 11,
+            "name": "Omega 168,017 brick",
+            "cost_usd": 811.5079365,
+            "expected_sale_usd": 1150,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 223.4920635
+          },
+          {
+            "stt": 12,
+            "name": "Omega 2767 GC",
+            "cost_usd": 696.8253968,
+            "expected_sale_usd": 880,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 68.17460317
+          }
+        ],
+        "summary": {
+          "revenue": 308689750,
+          "profit": 48574250,
+          "ceo_salary": 14847590,
+          "hieu_share": 14455246.48,
+          "thinh_share": 14455246.48,
+          "son_share": 4819539.714
+        },
+        "target_sales": 300000000,
+        "target_imports": 450000000,
+        "actual_sales": 308689750,
+        "actual_imports": 219335000
+      },
+      "Tháng 5 2026": {
+        "sales": [
+          {
+            "stt": 1,
+            "name": "Omega De Ville 166,0161",
+            "cost_usd": 402.3809524,
+            "sale_usd": 705,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 187.6190476,
+            "status": "chuyển pp",
+            "sale_vnd": 15104000,
+            "profit_vnd": 4964000
+          },
+          {
+            "stt": 2,
+            "name": "Omega 166,003/565",
+            "cost_usd": 618.2539683,
+            "sale_usd": 740,
+            "ship_usd": 40,
+            "customs_usd": 0,
+            "profit_usd": 81.74603175,
+            "status": "chuyển pp",
+            "sale_vnd": 17850000,
+            "profit_vnd": 2270000
+          },
+          {
+            "stt": 3,
+            "name": "Omega 1036/11 BOR bracelet",
+            "cost_usd": 208.3333333,
+            "sale_usd": 210,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "profit_usd": 1.666666667,
+            "status": "chuyển pp",
+            "sale_vnd": 5355000,
+            "profit_vnd": 105000
+          },
+          {
+            "stt": 4,
+            "name": "Omega 168,0056 GC",
+            "cost_usd": 785.6349206,
+            "sale_usd": 1020,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 119.3650794,
+            "status": "chuyển pp",
+            "sale_vnd": 23077500,
+            "profit_vnd": 3279500
+          },
+          {
+            "stt": 5,
+            "name": "Omega De Ville Cabochon",
+            "cost_usd": 563.015873,
+            "sale_usd": 730,
+            "ship_usd": 55,
+            "customs_usd": 0,
+            "profit_usd": 111.984127,
+            "status": "chuyển tm",
+            "sale_vnd": 17212500,
+            "profit_vnd": 3024500
+          },
+          {
+            "stt": 6,
+            "name": "Omega Geneve 165,041/552 w bracelet",
+            "cost_usd": 550.3968254,
+            "sale_usd": 750,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 84.6031746,
+            "status": "chuyển pp",
+            "sale_vnd": 16129000,
+            "profit_vnd": 2259000
+          },
+          {
+            "stt": 7,
+            "name": "Omega 14763 GC",
+            "cost_usd": 817.6587302,
+            "sale_usd": 1115,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 182.3412698,
+            "status": "chuyển pp",
+            "sale_vnd": 25500000,
+            "profit_vnd": 4895000
+          },
+          {
+            "stt": 8,
+            "name": "Omega 168.001/561",
+            "cost_usd": 476.1904762,
+            "sale_usd": 776,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 184.8095238,
+            "status": "chuyển pp",
+            "sale_vnd": 16789400,
+            "profit_vnd": 4339400
+          },
+          {
+            "stt": 9,
+            "name": "Omega 165,067 sparkle + bracelet",
+            "cost_usd": 745.4365079,
+            "sale_usd": 1070,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 209.5634921,
+            "status": "chuyển pp",
+            "sale_vnd": 24304750,
+            "profit_vnd": 5519750
+          },
+          {
+            "stt": 10,
+            "name": "Omega 14381 Crosshair piepan arrowhead",
+            "cost_usd": 2065.952381,
+            "sale_usd": 2420,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 239.047619,
+            "status": "chuyển tm",
+            "sale_vnd": 58673775,
+            "profit_vnd": 6611775
+          },
+          {
+            "stt": 11,
+            "name": "Omega 166,010 BOR 1037",
+            "cost_usd": 988.0952381,
+            "sale_usd": 1280,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 176.9047619,
+            "status": "chuyển tm",
+            "sale_vnd": 29649250,
+            "profit_vnd": 4749250
+          }
+        ],
+        "purchases": [
+          {
+            "stt": 1,
+            "name": "Ulysse Nardin 36000",
+            "cost_usd": 1003.769841,
+            "expected_sale_usd": 1250,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 131.2301587
+          },
+          {
+            "stt": 2,
+            "name": "Omega SMDV 166,020 BOR",
+            "cost_usd": 789.6825397,
+            "expected_sale_usd": 1080,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 175.3174603
+          },
+          {
+            "stt": 3,
+            "name": "Omega mesh 2058",
+            "cost_usd": 49.20634921,
+            "expected_sale_usd": 50,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "expected_profit_usd": 0.7936507937
+          },
+          {
+            "stt": 4,
+            "name": "Omega 168,0056 GC",
+            "cost_usd": 724.2063492,
+            "expected_sale_usd": 1020,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 180.7936508
+          },
+          {
+            "stt": 5,
+            "name": "Omega 168,029 linen flute",
+            "cost_usd": 1124.007937,
+            "expected_sale_usd": 1350,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 110.9920635
+          },
+          {
+            "stt": 6,
+            "name": "Omega 166,0161 BOR",
+            "cost_usd": 647.1428571,
+            "expected_sale_usd": 850,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 87.85714286
+          },
+          {
+            "stt": 7,
+            "name": "Omega 166,067",
+            "cost_usd": 553.5714286,
+            "expected_sale_usd": 750,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 81.42857143
+          },
+          {
+            "stt": 8,
+            "name": "Omega 168,024",
+            "cost_usd": 941.1904762,
+            "expected_sale_usd": 1250,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 193.8095238
+          },
+          {
+            "stt": 9,
+            "name": "Omega 2849",
+            "cost_usd": 672.6190476,
+            "expected_sale_usd": 880,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 92.38095238
+          },
+          {
+            "stt": 10,
+            "name": "Omega 168,0057 blue + brick bracelet",
+            "cost_usd": 909.0079365,
+            "expected_sale_usd": 1280,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 255.9920635
+          }
+        ],
+        "summary": {
+          "revenue": 249645175,
+          "profit": 42017175,
+          "ceo_salary": 9989355.25,
+          "hieu_share": 13727123.54,
+          "thinh_share": 13727123.54,
+          "son_share": 4576775.442
+        },
+        "target_sales": 250000000,
+        "target_imports": 400000000,
+        "actual_sales": 249645175,
+        "actual_imports": 208763000
+      },
+      "Tháng 4 2026": {
+        "sales": [
+          {
+            "stt": 1,
+            "name": "Omega 168,865 + bracelet",
+            "cost_usd": 813.1349206,
+            "sale_usd": 1080,
+            "ship_usd": 40,
+            "customs_usd": 0,
+            "profit_usd": 226.8650794,
+            "status": "chuyển tm",
+            "sale_vnd": 26936000,
+            "profit_vnd": 6445000
+          },
+          {
+            "stt": 2,
+            "name": "Omega 14393 GC crosshair",
+            "cost_usd": 1265.198413,
+            "sale_usd": 1490,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 109.8015873,
+            "status": "chuyển tm",
+            "sale_vnd": 35612500,
+            "profit_vnd": 3729500
+          },
+          {
+            "stt": 3,
+            "name": "Omega 168,024",
+            "cost_usd": 851.1904762,
+            "sale_usd": 1075,
+            "ship_usd": 55,
+            "customs_usd": 15,
+            "profit_usd": 153.8095238,
+            "status": "chuyển pp",
+            "sale_vnd": 26180250,
+            "profit_vnd": 4730250
+          },
+          {
+            "stt": 4,
+            "name": "Omega 1036/11 BOR bracelet",
+            "cost_usd": 226.1904762,
+            "sale_usd": 275,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "profit_usd": 48.80952381,
+            "status": "chuyển pp",
+            "sale_vnd": 7163750,
+            "profit_vnd": 1463750
+          },
+          {
+            "stt": 5,
+            "name": "Omega 168,0061",
+            "cost_usd": 693.6904762,
+            "sale_usd": 950,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 141.3095238,
+            "status": "chuyển pp",
+            "sale_vnd": 21584750,
+            "profit_vnd": 4103750
+          },
+          {
+            "stt": 6,
+            "name": "Omega 135,020",
+            "cost_usd": 540.0793651,
+            "sale_usd": 785,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 129.9206349,
+            "status": "chuyển pp",
+            "sale_vnd": 17085000,
+            "profit_vnd": 3475000
+          },
+          {
+            "stt": 7,
+            "name": "Omega 166,0172",
+            "cost_usd": 616.0714286,
+            "sale_usd": 850,
+            "ship_usd": 55,
+            "customs_usd": 15,
+            "profit_usd": 163.9285714,
+            "status": "chuyển pp",
+            "sale_vnd": 19890000,
+            "profit_vnd": 4365000
+          },
+          {
+            "stt": 8,
+            "name": "Omega 2038 Mesh bracelet",
+            "cost_usd": 138.8888889,
+            "sale_usd": 168,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "profit_usd": 29.11111111,
+            "status": "chuyển pp",
+            "sale_vnd": 4284000,
+            "profit_vnd": 784000
+          },
+          {
+            "stt": 9,
+            "name": "Omega Geneve",
+            "cost_usd": 465.7936508,
+            "sale_usd": 635,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "profit_usd": 104.2063492,
+            "status": "chuyển pp",
+            "sale_vnd": 14535000,
+            "profit_vnd": 2797000
+          },
+          {
+            "stt": 10,
+            "name": "Omega 168,0056",
+            "cost_usd": 575.3968254,
+            "sale_usd": 1000,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 309.6031746,
+            "status": "chuyển pp",
+            "sale_vnd": 22671045,
+            "profit_vnd": 8171045
+          },
+          {
+            "stt": 11,
+            "name": "Omega 1040/518 brick bracelet -2",
+            "cost_usd": 178.5714286,
+            "sale_usd": 200,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "profit_usd": 21.42857143,
+            "status": "chuyển pp",
+            "sale_vnd": 5123400,
+            "profit_vnd": 623400
+          },
+          {
+            "stt": 12,
+            "name": "Omega 14762 arrowhead",
+            "cost_usd": 715.2380952,
+            "sale_usd": 1045,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 214.7619048,
+            "status": "chuyển tm",
+            "sale_vnd": 23947500,
+            "profit_vnd": 5923500
+          },
+          {
+            "stt": 13,
+            "name": "Omega 166.010",
+            "cost_usd": 682.3809524,
+            "sale_usd": 950,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 152.6190476,
+            "status": "chuyển pp",
+            "sale_vnd": 21501250,
+            "profit_vnd": 4305250
+          },
+          {
+            "stt": 14,
+            "name": "Omega 166,026 cosmic",
+            "cost_usd": 397.1428571,
+            "sale_usd": 490,
+            "ship_usd": 55,
+            "customs_usd": 0,
+            "profit_usd": 37.85714286,
+            "status": "chuyển pp",
+            "sale_vnd": 11201250,
+            "profit_vnd": 1193250
+          },
+          {
+            "stt": 15,
+            "name": "Omega 166,067 GC",
+            "cost_usd": 625.1984127,
+            "sale_usd": 880,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 139.8015873,
+            "status": "chuyển pp",
+            "sale_vnd": 19698750,
+            "profit_vnd": 3943750
+          },
+          {
+            "stt": 16,
+            "name": "Núm Omega bọc vàng",
+            "cost_usd": 39.68253968,
+            "sale_usd": 39,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "profit_usd": -0.6825396825,
+            "status": "chuyển pp",
+            "sale_vnd": 1004250,
+            "profit_vnd": 4250
+          },
+          {
+            "stt": 17,
+            "name": "Omega 168,005 crosshair",
+            "cost_usd": 998.015873,
+            "sale_usd": 1350,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "profit_usd": 236.984127,
+            "status": "chuyển tm",
+            "sale_vnd": 31801250,
+            "profit_vnd": 6651250
+          }
+        ],
+        "purchases": [
+          {
+            "stt": 1,
+            "name": "Omega 166,003 GC",
+            "cost_usd": 859.3253968,
+            "expected_sale_usd": 1050,
+            "ship_usd": 55,
+            "customs_usd": 20,
+            "expected_profit_usd": 115.6746032
+          },
+          {
+            "stt": 2,
+            "name": "Omega 135,020",
+            "cost_usd": 540.0793651,
+            "expected_sale_usd": 680,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 74.92063492
+          },
+          {
+            "stt": 3,
+            "name": "Omega 168,0056 GC",
+            "cost_usd": 785.6349206,
+            "expected_sale_usd": 950,
+            "ship_usd": 55,
+            "customs_usd": 15,
+            "expected_profit_usd": 94.36507937
+          },
+          {
+            "stt": 4,
+            "name": "Omega 168,0056",
+            "cost_usd": 575.3968254,
+            "expected_sale_usd": 850,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 209.6031746
+          },
+          {
+            "stt": 5,
+            "name": "Omega 1040/518 brick bracelet -2",
+            "cost_usd": 178.5714286,
+            "expected_sale_usd": 225,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "expected_profit_usd": 46.42857143
+          },
+          {
+            "stt": 6,
+            "name": "Omega 168,059 white dial w bracelet",
+            "cost_usd": 665.4761905,
+            "expected_sale_usd": 880,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 149.5238095
+          },
+          {
+            "stt": 7,
+            "name": "Omega Geneve 165,041/552 w bracelet",
+            "cost_usd": 550.3968254,
+            "expected_sale_usd": 680,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 64.6031746
+          },
+          {
+            "stt": 8,
+            "name": "Omega 14762 arrowhead",
+            "cost_usd": 715.2380952,
+            "expected_sale_usd": 950,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 169.7619048
+          },
+          {
+            "stt": 9,
+            "name": "Omega 7912/4 flatlink bracelet",
+            "cost_usd": 616.6666667,
+            "expected_sale_usd": 950,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 268.3333333
+          },
+          {
+            "stt": 10,
+            "name": "Omega 166,026 cosmic",
+            "cost_usd": 397.1428571,
+            "expected_sale_usd": 550,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 87.85714286
+          },
+          {
+            "stt": 11,
+            "name": "Omega 1098/526 bracelet",
+            "cost_usd": 178.5714286,
+            "expected_sale_usd": 200,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "expected_profit_usd": 21.42857143
+          },
+          {
+            "stt": 12,
+            "name": "Omega 166,067 GC",
+            "cost_usd": 625.1984127,
+            "expected_sale_usd": 800,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 109.8015873
+          },
+          {
+            "stt": 13,
+            "name": "Núm Omega bọc vàng",
+            "cost_usd": 39.68253968,
+            "expected_sale_usd": 50,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "expected_profit_usd": 10.31746032
+          },
+          {
+            "stt": 14,
+            "name": "Omega 168,005 crosshair",
+            "cost_usd": 998.015873,
+            "expected_sale_usd": 1250,
+            "ship_usd": 55,
+            "customs_usd": 15,
+            "expected_profit_usd": 181.984127
+          },
+          {
+            "stt": 15,
+            "name": "Omega BOR 1036/11",
+            "cost_usd": 119.047619,
+            "expected_sale_usd": 175,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "expected_profit_usd": 55.95238095
+          },
+          {
+            "stt": 16,
+            "name": "Omega 165,067 sparkle + bracelet",
+            "cost_usd": 745.4365079,
+            "expected_sale_usd": 950,
+            "ship_usd": 55,
+            "customs_usd": 15,
+            "expected_profit_usd": 134.5634921
+          },
+          {
+            "stt": 17,
+            "name": "Omega 166,0161 w Paper",
+            "cost_usd": 522.8174603,
+            "expected_sale_usd": 800,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 212.1825397
+          },
+          {
+            "stt": 18,
+            "name": "Omega 1037/570 bracelet",
+            "cost_usd": 154.7619048,
+            "expected_sale_usd": 250,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "expected_profit_usd": 95.23809524
+          },
+          {
+            "stt": 19,
+            "name": "Omega De Ville 166,0161",
+            "cost_usd": 402.3809524,
+            "expected_sale_usd": 600,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 132.6190476
+          },
+          {
+            "stt": 20,
+            "name": "Omega De Vile 161,024/711",
+            "cost_usd": 412.6984127,
+            "expected_sale_usd": 600,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 122.3015873
+          },
+          {
+            "stt": 21,
+            "name": "Omega 166,010 BOR 1037",
+            "cost_usd": 988.0952381,
+            "expected_sale_usd": 1250,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 146.9047619
+          },
+          {
+            "stt": 22,
+            "name": "Omega 168,0057 GC",
+            "cost_usd": 851.1904762,
+            "expected_sale_usd": 1400,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 433.8095238
+          },
+          {
+            "stt": 23,
+            "name": "Omega Seamaster 14765",
+            "cost_usd": 594.047619,
+            "expected_sale_usd": 800,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 90.95238095
+          },
+          {
+            "stt": 24,
+            "name": "Omega 7912/7 flatlink bracelet",
+            "cost_usd": 557.5396825,
+            "expected_sale_usd": 900,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 227.4603175
+          },
+          {
+            "stt": 25,
+            "name": "Omega 14763 GC",
+            "cost_usd": 817.6587302,
+            "expected_sale_usd": 1100,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 167.3412698
+          },
+          {
+            "stt": 26,
+            "name": "Omega Seamaster De Ville 135,010",
+            "cost_usd": 494.047619,
+            "expected_sale_usd": 680,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "expected_profit_usd": 120.952381
+          },
+          {
+            "stt": 27,
+            "name": "Omega 166,010 BOR",
+            "cost_usd": 775.7936508,
+            "expected_sale_usd": 1050,
+            "ship_usd": 80,
+            "customs_usd": 35,
+            "expected_profit_usd": 159.2063492
+          }
+        ],
+        "summary": {
+          "revenue": 310219945,
+          "profit": 62708945,
+          "ceo_salary": 14908797.8,
+          "hieu_share": 20487143.09,
+          "thinh_share": 20487143.09,
+          "son_share": 6830641.035
+        },
+        "target_sales": 150000000,
+        "target_imports": 350000000,
+        "actual_sales": 310219945,
+        "actual_imports": 399605000
+      },
+      "Tháng 3 2026": {
+        "sales": [
+          {
+            "stt": 1,
+            "name": "Omega 168,0061+bracelet",
+            "cost_usd": 885.515873,
+            "sale_usd": 1150,
+            "ship_usd": 55,
+            "customs_usd": 30,
+            "profit_usd": 179.484127,
+            "status": "chuyển PP",
+            "sale_vnd": 27583500,
+            "profit_vnd": 5268500
+          },
+          {
+            "stt": 2,
+            "name": "Omega 168,024",
+            "cost_usd": 691.2698413,
+            "sale_usd": 850,
+            "ship_usd": 30,
+            "customs_usd": 0,
+            "profit_usd": 128.7301587,
+            "status": "chuyển tm",
+            "sale_vnd": 21238000,
+            "profit_vnd": 3818000
+          },
+          {
+            "stt": 3,
+            "name": "Omega 168.061",
+            "cost_usd": 815.7936508,
+            "sale_usd": 960,
+            "ship_usd": 30,
+            "customs_usd": 0,
+            "profit_usd": 114.2063492,
+            "status": "chuyển tm",
+            "sale_vnd": 24087000,
+            "profit_vnd": 3529000
+          },
+          {
+            "stt": 4,
+            "name": "Omega 168.045 + bracelet",
+            "cost_usd": 672.2619048,
+            "sale_usd": 900,
+            "ship_usd": 55,
+            "customs_usd": 12,
+            "profit_usd": 160.7380952,
+            "status": "chuyển pp",
+            "sale_vnd": 21408000,
+            "profit_vnd": 4467000
+          },
+          {
+            "stt": 5,
+            "name": "Omega 168.047 black spider dial",
+            "cost_usd": 408.7301587,
+            "sale_usd": 690,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "profit_usd": 216.2698413,
+            "status": "chuyển pp",
+            "sale_vnd": 16000000,
+            "profit_vnd": 5700000
+          },
+          {
+            "stt": 6,
+            "name": "Omega 168.0056",
+            "cost_usd": 605.8730159,
+            "sale_usd": 825,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "profit_usd": 154.1269841,
+            "status": "chuyển pp",
+            "sale_vnd": 19684000,
+            "profit_vnd": 4416000
+          },
+          {
+            "stt": 7,
+            "name": "Omega 168,029",
+            "cost_usd": 869.047619,
+            "sale_usd": 1070,
+            "ship_usd": 55,
+            "customs_usd": 20,
+            "profit_usd": 125.952381,
+            "status": "chuyển pp",
+            "sale_vnd": 25770500,
+            "profit_vnd": 3870500
+          },
+          {
+            "stt": 8,
+            "name": "Omega 1040/518 brick bracelet",
+            "cost_usd": 181.9444444,
+            "sale_usd": 225,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "profit_usd": 43.05555556,
+            "status": "chuyển pp",
+            "sale_vnd": 5827500,
+            "profit_vnd": 1242500
+          },
+          {
+            "stt": 9,
+            "name": "Omega De Ville 166,0086",
+            "cost_usd": 434.7222222,
+            "sale_usd": 650,
+            "ship_usd": 55,
+            "customs_usd": 10,
+            "profit_usd": 150.2777778,
+            "status": "chuyển pp",
+            "sale_vnd": 15151500,
+            "profit_vnd": 4196500
+          },
+          {
+            "stt": 10,
+            "name": "Omega 168,0061 BOR",
+            "cost_usd": 1038.333333,
+            "sale_usd": 1150,
+            "ship_usd": 40,
+            "customs_usd": 0,
+            "profit_usd": 71.66666667,
+            "status": "chuyển tm",
+            "sale_vnd": 28749000,
+            "profit_vnd": 2583000
+          }
+        ],
+        "purchases": [
+          {
+            "stt": 1,
+            "name": "Omega 168,024",
+            "cost_usd": 691.2698413,
+            "expected_sale_usd": 1000,
+            "ship_usd": 55,
+            "customs_usd": 30,
+            "expected_profit_usd": 223.7301587
+          },
+          {
+            "stt": 2,
+            "name": "Omega 168,029",
+            "cost_usd": 869.047619,
+            "expected_sale_usd": 1150,
+            "ship_usd": 55,
+            "customs_usd": 30,
+            "expected_profit_usd": 195.952381
+          },
+          {
+            "stt": 3,
+            "name": "Omega 168,0061 BOR",
+            "cost_usd": 1038.333333,
+            "expected_sale_usd": 1300,
+            "ship_usd": 55,
+            "customs_usd": 30,
+            "expected_profit_usd": 176.6666667
+          },
+          {
+            "stt": 4,
+            "name": "Omega 168,024 BOR",
+            "cost_usd": 851.1904762,
+            "expected_sale_usd": 1300,
+            "ship_usd": 55,
+            "customs_usd": 30,
+            "expected_profit_usd": 363.8095238
+          },
+          {
+            "stt": 5,
+            "name": "Omega 14393 GC crosshair",
+            "cost_usd": 1265.198413,
+            "expected_sale_usd": 1500,
+            "ship_usd": 55,
+            "customs_usd": 30,
+            "expected_profit_usd": 149.8015873
+          },
+          {
+            "stt": 6,
+            "name": "Omega 14770 Deville GC",
+            "cost_usd": 763.7698413,
+            "expected_sale_usd": 1180,
+            "ship_usd": 55,
+            "customs_usd": 30,
+            "expected_profit_usd": 331.2301587
+          },
+          {
+            "stt": 7,
+            "name": "Omega De Ville 166,0086",
+            "cost_usd": 434.7222222,
+            "expected_sale_usd": 650,
+            "ship_usd": 55,
+            "customs_usd": 30,
+            "expected_profit_usd": 130.2777778
+          },
+          {
+            "stt": 8,
+            "name": "Omega 168,0061",
+            "cost_usd": 693.6904762,
+            "expected_sale_usd": 880,
+            "ship_usd": 55,
+            "customs_usd": 30,
+            "expected_profit_usd": 101.3095238
+          },
+          {
+            "stt": 9,
+            "name": "Omega 2038 Mesh bracelet",
+            "cost_usd": 138.8888889,
+            "expected_sale_usd": 200,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "expected_profit_usd": 61.11111111
+          },
+          {
+            "stt": 10,
+            "name": "Omega 1040/518 brick bracelet",
+            "cost_usd": 180.2777778,
+            "expected_sale_usd": 200,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "expected_profit_usd": 19.72222222
+          },
+          {
+            "stt": 11,
+            "name": "Omega 1036/11 BOR bracelet",
+            "cost_usd": 226.1904762,
+            "expected_sale_usd": 275,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "expected_profit_usd": 48.80952381
+          },
+          {
+            "stt": 12,
+            "name": "Omega 168,865 + bracelet",
+            "cost_usd": 813.1349206,
+            "expected_sale_usd": 1150,
+            "ship_usd": 55,
+            "customs_usd": 30,
+            "expected_profit_usd": 251.8650794
+          },
+          {
+            "stt": 13,
+            "name": "Omega 166,003/565",
+            "cost_usd": 618.2539683,
+            "expected_sale_usd": 800,
+            "ship_usd": 55,
+            "customs_usd": 30,
+            "expected_profit_usd": 96.74603175
+          },
+          {
+            "stt": 14,
+            "name": "Omega 1036/11 BOR bracelet",
+            "cost_usd": 208.3333333,
+            "expected_sale_usd": 250,
+            "ship_usd": 0,
+            "customs_usd": 0,
+            "expected_profit_usd": 41.66666667
+          },
+          {
+            "stt": 15,
+            "name": "Omega 166,0172",
+            "cost_usd": 616.0714286,
+            "expected_sale_usd": 775,
+            "ship_usd": 55,
+            "customs_usd": 15,
+            "expected_profit_usd": 88.92857143
+          }
+        ],
+        "summary": {
+          "revenue": 205499000,
+          "profit": 39091000,
+          "ceo_salary": 8664970,
+          "hieu_share": 13040596.46,
+          "thinh_share": 13040596.46,
+          "son_share": 4347879.687
+        },
+        "target_sales": 100000000,
+        "target_imports": 150000000,
+        "actual_sales": 205499000,
+        "actual_imports": 251926000
+      }
+    },
+    "syncedReports": [
+      {
+        "month": "Tháng 8 2026",
+        "amount": 11516551,
+        "revenue": 233788825,
+        "profit": 36383825
+      },
+      {
+        "month": "Tháng 7 2026",
+        "amount": 11574522,
+        "revenue": 209160225,
+        "profit": 35780225
+      },
+      {
+        "month": "Tháng 6 2026",
+        "amount": 14455246,
+        "revenue": 308689750,
+        "profit": 48574250
+      },
+      {
+        "month": "Tháng 5 2026",
+        "amount": 13727124,
+        "revenue": 249645175,
+        "profit": 42017175
+      },
+      {
+        "month": "Tháng 4 2026",
+        "amount": 20487143,
+        "revenue": 310219945,
+        "profit": 62708945
+      },
+      {
+        "month": "Tháng 3 2026",
+        "amount": 13040596,
+        "revenue": 205499000,
+        "profit": 39091000
+      }
+    ],
+    "shareholderInfo": {
+      "name": "Thịnh (Cổ đông)",
+      "sharePercent": "42.86%",
+      "contributedCapital": 300000000
+    }
+  }
+}
