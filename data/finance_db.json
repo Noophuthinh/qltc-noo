@@ -27,7 +27,7 @@
       "color": "#f59e0b",
       "icon": "Coins",
       "description": "Lợi nhuận, dòng tiền định kỳ từ Quỹ Đầu tư Thành 7",
-      "monthlyTarget": 8000000,
+      "monthlyTarget": 5000000,
       "createdAt": "2026-01-01"
     },
     {
@@ -37,7 +37,7 @@
       "color": "#94a3b8",
       "icon": "HelpCircle",
       "description": "Các khoản thu nhập vãng lai, thưởng phụ chưa phân loại",
-      "monthlyTarget": 13000000,
+      "monthlyTarget": 15000000,
       "createdAt": "2026-01-01"
     }
   ],
@@ -102,7 +102,7 @@
       "id": "wal-1",
       "name": "Tài khoản Ngân hàng (Chính)",
       "type": "bank",
-      "balance": 17720000,
+      "balance": 21900000,
       "icon": "Building2",
       "color": "#3b82f6"
     },
@@ -195,6 +195,68 @@
     }
   ],
   "transactions": [
+    {
+      "id": "tx-1789021639392-ydi15",
+      "createdAt": "2026-09-10T06:27:19.392Z",
+      "type": "expense",
+      "amount": 50000,
+      "walletId": "wal-1",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "date": "2026-09-10T06:27:00.000Z",
+      "note": "ăn sáng",
+      "categoryId": "exp-1",
+      "categoryName": "Ăn uống & Cà phê"
+    },
+    {
+      "id": "tx-1789020875070-kxqvo",
+      "createdAt": "2026-09-10T06:14:35.070Z",
+      "type": "income",
+      "amount": 1000000,
+      "walletId": "wal-1",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "date": "2026-09-10T06:14:00.000Z",
+      "note": "",
+      "incomeSourceId": "inc-4",
+      "incomeSourceName": "Không xác định",
+      "category": "Nguồn khác"
+    },
+    {
+      "id": "tx-1788943729145-5v03b",
+      "createdAt": "2026-09-09T08:48:49.145Z",
+      "type": "income",
+      "amount": 3500000,
+      "walletId": "wal-1",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "date": "2026-09-09T08:48:00.000Z",
+      "note": "PB",
+      "incomeSourceId": "inc-4",
+      "incomeSourceName": "Không xác định",
+      "category": "Nguồn khác"
+    },
+    {
+      "id": "tx-1788943712265-5xaad",
+      "createdAt": "2026-09-09T08:48:32.265Z",
+      "type": "expense",
+      "amount": 200000,
+      "walletId": "wal-1",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "date": "2026-09-09T08:48:00.000Z",
+      "note": "ăn sáng cùng na",
+      "categoryId": "exp-1",
+      "categoryName": "Ăn uống & Cà phê"
+    },
+    {
+      "id": "tx-1788484243241-hd30d",
+      "createdAt": "2026-09-04T01:10:43.242Z",
+      "type": "expense",
+      "amount": 70000,
+      "walletId": "wal-1",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "date": "2026-09-04T01:10:00.000Z",
+      "note": "Đổ xăng",
+      "categoryId": "exp-3",
+      "categoryName": "Đi lại & Xăng xe"
+    },
     {
       "id": "tx-1788425574069-yntvi",
       "createdAt": "2026-09-03T08:52:54.069Z",
