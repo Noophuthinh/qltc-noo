@@ -102,7 +102,7 @@
       "id": "wal-1",
       "name": "Tài khoản Ngân hàng (Chính)",
       "type": "bank",
-      "balance": 21900000,
+      "balance": 26246000,
       "icon": "Building2",
       "color": "#3b82f6"
     },
@@ -195,6 +195,43 @@
     }
   ],
   "transactions": [
+    {
+      "id": "tx-1789100000000-kth45",
+      "createdAt": "2026-09-11T08:30:00.000Z",
+      "type": "income",
+      "amount": 4500000,
+      "walletId": "wal-1",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "date": "2026-09-11T08:30:00.000Z",
+      "note": "Thu nhập khác",
+      "incomeSourceId": "inc-4",
+      "incomeSourceName": "Không xác định",
+      "category": "Nguồn khác"
+    },
+    {
+      "id": "tx-1789090000000-exp104",
+      "createdAt": "2026-09-11T04:20:00.000Z",
+      "type": "expense",
+      "amount": 104000,
+      "walletId": "wal-1",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "date": "2026-09-11T04:20:00.000Z",
+      "note": "Chi tiêu sinh hoạt",
+      "categoryId": "exp-1",
+      "categoryName": "Ăn uống & Cà phê"
+    },
+    {
+      "id": "tx-1789080000000-exp50b",
+      "createdAt": "2026-09-10T12:00:00.000Z",
+      "type": "expense",
+      "amount": 50000,
+      "walletId": "wal-1",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "date": "2026-09-10T12:00:00.000Z",
+      "note": "Chi tiêu vặt",
+      "categoryId": "exp-9",
+      "categoryName": "Chi phí khác"
+    },
     {
       "id": "tx-1789021639392-ydi15",
       "createdAt": "2026-09-10T06:27:19.392Z",
