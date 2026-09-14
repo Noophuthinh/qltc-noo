@@ -212,51 +212,82 @@ export default function SettingsPage({
         </div>
       </div>
 
-      {/* Section 2: Quản lý Dữ liệu & Xóa sạch */}
+      {/* Section 2: Quản lý Dữ liệu & Tích hợp Excel / Cloud */}
       <div className="bg-slate-900/90 rounded-2xl border border-slate-800/80 p-6 shadow-xl space-y-4">
         <div>
           <h3 className="text-base font-bold text-white flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
-            Sao Lưu & Quản Lý Dữ Liệu
+            Đồng Bộ Excel (.xlsx) & Cơ Sở Dữ Liệu
           </h3>
           <p className="text-xs text-slate-400 mt-0.5">
-            Dữ liệu luôn được lưu an toàn trong file `data/finance_db.json`.
+            Dữ liệu có thể xuất và nhập trực tiếp từ file Excel (.xlsx), hoặc sao lưu qua JSON.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+          {/* Export Excel .xlsx */}
+          <button
+            onClick={() => { window.location.href = '/api/export/excel'; }}
+            className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-emerald-500/50 flex flex-col items-center text-center space-y-2 group transition-all"
+          >
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <FileSpreadsheet className="w-5 h-5" />
+            </div>
+            <span className="text-xs font-bold text-slate-200">Xuất File Excel (.xlsx)</span>
+            <span className="text-[10px] text-slate-500">Tải file Excel đầy đủ các sheet</span>
+          </button>
+
+          {/* Import Excel .xlsx */}
+          <label className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-indigo-500/50 flex flex-col items-center text-center space-y-2 group cursor-pointer transition-all">
+            <input 
+              type="file" 
+              accept=".xlsx, .xls, .csv" 
+              onChange={async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                try {
+                  const formData = new FormData();
+                  formData.append('file', file);
+                  const res = await fetch('/api/import/excel', { method: 'POST', body: formData });
+                  const data = await res.json();
+                  if (!res.ok) throw new Error(data.error || 'Lỗi nhập file Excel');
+                  alert(`🎉 Nhập Excel thành công!\n- Đọc được: ${data.totalRead} giao dịch\n- Đã thêm mới: ${data.addedCount} giao dịch`);
+                  onReload();
+                } catch (err) {
+                  alert('❌ ' + err.message);
+                } finally {
+                  e.target.value = '';
+                }
+              }} 
+              className="hidden" 
+            />
+            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Upload className="w-5 h-5" />
+            </div>
+            <span className="text-xs font-bold text-slate-200">Nhập Từ File Excel</span>
+            <span className="text-[10px] text-slate-500">Nạp giao dịch từ file .xlsx</span>
+          </label>
+
           {/* Export JSON */}
           <button
             onClick={handleExportJSON}
             className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-emerald-500/50 flex flex-col items-center text-center space-y-2 group transition-all"
           >
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Download className="w-5 h-5" />
             </div>
-            <span className="text-xs font-bold text-slate-200">Tải Bản Sao Lưu (JSON)</span>
-            <span className="text-[10px] text-slate-500">Lưu toàn bộ giao dịch & cấu hình</span>
-          </button>
-
-          {/* Export CSV */}
-          <button
-            onClick={handleExportCSV}
-            className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-emerald-500/50 flex flex-col items-center text-center space-y-2 group transition-all"
-          >
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <FileSpreadsheet className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold text-slate-200">Xuất File Excel / CSV</span>
-            <span className="text-[10px] text-slate-500">Mở và tính toán trong Excel</span>
+            <span className="text-xs font-bold text-slate-200">Tải Bản Sao Lưu JSON</span>
+            <span className="text-[10px] text-slate-500">Dữ liệu thô dự phòng</span>
           </button>
 
           {/* Import JSON */}
           <label className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-indigo-500/50 flex flex-col items-center text-center space-y-2 group cursor-pointer transition-all">
             <input type="file" accept=".json" onChange={handleImportFile} className="hidden" />
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Upload className="w-5 h-5" />
             </div>
-            <span className="text-xs font-bold text-slate-200">Nhập File Sao Lưu</span>
-            <span className="text-[10px] text-slate-500">Khôi phục từ file JSON</span>
+            <span className="text-xs font-bold text-slate-200">Khôi Phục JSON</span>
+            <span className="text-[10px] text-slate-500">Nạp từ file backup JSON</span>
           </label>
         </div>
 

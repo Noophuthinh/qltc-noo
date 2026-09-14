@@ -320,6 +320,45 @@ app.delete('/api/savings-goals/:id', (req, res) => {
   res.json({ success: true });
 });
 
+// Multer memory storage để nhận file upload
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
+
+// API: Export Excel (.xlsx) chuẩn hóa
+app.get('/api/export/excel', (req, res) => {
+  try {
+    const buffer = db.exportExcelBuffer();
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename="Noo_Finance_SoGiaoDich.xlsx"');
+    res.send(buffer);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// API: Import Excel (.xlsx)
+app.post('/api/import/excel', upload.single('file'), (req, res) => {
+  try {
+    if (!req.file || !req.file.buffer) {
+      return res.status(400).json({ error: 'Vui lòng chọn file Excel (.xlsx) để tải lên' });
+    }
+    const result = db.importFromExcel(req.file.buffer);
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// API: Kiểm tra trạng thái Cơ sở dữ liệu (Cloud vs Local)
+app.get('/api/status/db', (req, res) => {
+  res.json({
+    isCloud: !!db.mongoCollection,
+    type: db.mongoCollection ? 'MongoDB Atlas (Cloud Vĩnh Viễn)' : 'Local JSON / Ephemeral Disk',
+    totalTransactions: (db.getData().transactions || []).length,
+    lastBackup: new Date().toISOString()
+  });
+});
+
 // API: Export CSV
 app.get('/api/export/csv', (req, res) => {
   const txs = db.getTransactions();
@@ -360,6 +399,9 @@ app.post('/api/reset', (req, res) => {
   const data = db.resetToDefaults();
   res.json({ success: true, message: 'Đã khôi phục dữ liệu ban đầu', data });
 });
+
+// Khởi tạo Cloud DB
+db.initCloudDB();
 
 // Phục vụ frontend static nếu đã build
 const distPath = path.join(__dirname, '..', 'dist');

@@ -85,8 +85,32 @@ export default function TransactionsPage({
     return { income, expense, net: income - expense };
   }, [filteredTransactions]);
 
-  const handleExportCSV = () => {
-    window.location.href = '/api/export/csv';
+  const handleExportExcel = () => {
+    window.location.href = '/api/export/excel';
+  };
+
+  const handleFileImport = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/api/import/excel', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Lỗi khi nhập file Excel');
+
+      alert(`🎉 Nhập Excel thành công!\n- Đọc được: ${data.totalRead} giao dịch\n- Đã thêm mới: ${data.addedCount} giao dịch`);
+      window.location.reload();
+    } catch (err) {
+      alert('❌ ' + err.message);
+    } finally {
+      e.target.value = '';
+    }
   };
 
   return (
@@ -101,17 +125,32 @@ export default function TransactionsPage({
           </div>
           <h2 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">Sổ Giao Dịch</h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Quản lý và tra cứu dòng tiền theo tháng hoặc toàn bộ thời gian
+            Quản lý, xuất/nhập Excel (.xlsx) và tra cứu dòng tiền theo tháng
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2 md:gap-3">
+          {/* Nút Xuất Excel .xlsx */}
           <button
-            onClick={handleExportCSV}
+            onClick={handleExportExcel}
+            title="Tải toàn bộ sổ giao dịch thành file Excel .xlsx"
             className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 flex items-center space-x-1.5 transition-colors"
           >
             <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Xuất Excel</span>
+            <span>Xuất Excel (.xlsx)</span>
           </button>
+
+          {/* Nút Nhập từ Excel */}
+          <label className="px-3 py-2 rounded-xl bg-indigo-950/60 hover:bg-indigo-900/60 text-xs font-semibold text-indigo-200 border border-indigo-700/60 flex items-center space-x-1.5 transition-colors cursor-pointer">
+            <span>📥 Nhập từ Excel</span>
+            <input
+              type="file"
+              accept=".xlsx, .xls, .csv"
+              onChange={handleFileImport}
+              className="hidden"
+            />
+          </label>
+
+          {/* Nút Thêm mới */}
           <button
             onClick={onOpenNewTx}
             className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/30 flex items-center space-x-1.5 transition-all active:scale-95"

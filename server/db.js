@@ -133,6 +133,8 @@ class Database {
     try {
       fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf8');
       this.data = data;
+      this.saveExcelFile();
+      this.syncToCloud();
       return true;
     } catch (e) {
       console.error('Lỗi khi ghi DB:', e);
@@ -462,6 +464,185 @@ class Database {
     }
   }
 
+  // Export toàn bộ dữ liệu ra buffer Excel (.xlsx)
+  exportExcelBuffer() {
+    const XLSX = require('xlsx');
+    const wb = XLSX.utils.book_new();
+
+    // Sheet 1: Sổ Giao Dịch
+    const txRows = (this.data.transactions || []).map((t, idx) => ({
+      'STT': idx + 1,
+      'Thời gian': t.date ? new Date(t.date).toLocaleString('vi-VN') : '',
+      'Phân loại': t.type === 'income' ? 'Thu nhập' : t.type === 'expense' ? 'Chi tiêu' : 'Chuyển ví',
+      'Khoản mục / Nguồn thu': t.incomeSourceName || t.categoryName || t.category || '',
+      'Số tiền (VNĐ)': Number(t.amount || 0),
+      'Ví thanh toán': t.walletName || 'Chính',
+      'Ghi chú': t.note || ''
+    }));
+    const wsTx = XLSX.utils.json_to_sheet(txRows);
+    XLSX.utils.book_append_sheet(wb, wsTx, 'So_Giao_Dich');
+
+    // Sheet 2: 4 Nguồn Thu Nhập
+    const srcRows = (this.data.incomeSources || []).map((s, idx) => ({
+      'STT': idx + 1,
+      'Nguồn thu nhập': s.name,
+      'Phân loại': s.category,
+      'Kế hoạch / Lương tháng (VNĐ)': Number(s.monthlyTarget || 0),
+      'Mô tả': s.description || ''
+    }));
+    const wsSrc = XLSX.utils.json_to_sheet(srcRows);
+    XLSX.utils.book_append_sheet(wb, wsSrc, 'Nguon_Thu_Nhap');
+
+    // Sheet 3: Tài Khoản & Ví
+    const walRows = (this.data.wallets || []).map((w, idx) => ({
+      'STT': idx + 1,
+      'Tên Ví / Tài khoản': w.name,
+      'Loại': w.type,
+      'Số dư hiện tại (VNĐ)': Number(w.balance || 0)
+    }));
+    const wsWal = XLSX.utils.json_to_sheet(walRows);
+    XLSX.utils.book_append_sheet(wb, wsWal, 'Tai_Khoan_Vi');
+
+    return XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+  }
+
+  // Nhập dữ liệu từ file Excel (.xlsx)
+  importFromExcel(buffer) {
+    const XLSX = require('xlsx');
+    const wb = XLSX.read(buffer, { type: 'buffer' });
+    
+    // Tìm sheet giao dịch
+    const sheetName = wb.SheetNames.find(n => n.toLowerCase().includes('giao_dich') || n.toLowerCase().includes('giaodich') || n.toLowerCase().includes('sheet1')) || wb.SheetNames[0];
+    const ws = wb.Sheets[sheetName];
+    const rows = XLSX.utils.sheet_to_json(ws);
+
+    if (!rows || rows.length === 0) {
+      throw new Error('File Excel không có dữ liệu giao dịch');
+    }
+
+    const importedTxs = [];
+    rows.forEach((r, idx) => {
+      const typeRaw = (r['Phân loại'] || r['Loại'] || r['Type'] || '').toString().toLowerCase();
+      const type = typeRaw.includes('thu') ? 'income' : typeRaw.includes('chi') ? 'expense' : 'income';
+      const amount = Number(r['Số tiền (VNĐ)'] || r['Số tiền'] || r['Amount'] || 0);
+      if (amount <= 0) return;
+
+      const name = (r['Khoản mục / Nguồn thu'] || r['Khoản mục'] || r['Tên'] || r['Category'] || 'Giao dịch').toString();
+      const note = (r['Ghi chú'] || r['Note'] || '').toString();
+      const walletName = (r['Ví thanh toán'] || r['Ví'] || 'Tài khoản Ngân hàng (Chính)').toString();
+
+      let dateVal = new Date().toISOString();
+      const timeRaw = r['Thời gian'] || r['Ngày'] || r['Date'];
+      if (timeRaw) {
+        const parsed = new Date(timeRaw);
+        if (!isNaN(parsed.getTime())) {
+          dateVal = parsed.toISOString();
+        }
+      }
+
+      importedTxs.push({
+        id: `tx-excel-${Date.now()}-${idx}`,
+        createdAt: dateVal,
+        date: dateVal,
+        type,
+        amount,
+        incomeSourceName: type === 'income' ? name : undefined,
+        categoryName: type === 'expense' ? name : undefined,
+        category: name,
+        walletName,
+        walletId: 'wal-1',
+        note
+      });
+    });
+
+    if (importedTxs.length === 0) {
+      throw new Error('Không thể trích xuất giao dịch hợp lệ nào từ file Excel');
+    }
+
+    // Merge transactions (tránh duplicate dựa trên thời gian và số tiền và tên)
+    const existingMap = new Set(this.data.transactions.map(t => `${t.date}-${t.amount}-${t.type}`));
+    let addedCount = 0;
+    for (const t of importedTxs) {
+      const key = `${t.date}-${t.amount}-${t.type}`;
+      if (!existingMap.has(key)) {
+        this.data.transactions.push(t);
+        existingMap.add(key);
+        addedCount++;
+      }
+    }
+
+    // Sắp xếp lại
+    this.data.transactions.sort((a, b) => new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt));
+    this.recalculateBalances();
+    this.save();
+
+    return {
+      success: true,
+      totalRead: importedTxs.length,
+      addedCount,
+      totalNow: this.data.transactions.length
+    };
+  }
+
+  // Lưu bản backup Excel song song
+  saveExcelFile() {
+    try {
+      const XLSX = require('xlsx');
+      const buf = this.exportExcelBuffer();
+      const excelPath = path.join(DATA_DIR, 'finance_records.xlsx');
+      fs.writeFileSync(excelPath, buf);
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  // Kết nối MongoDB Cloud (nếu có MONGODB_URI)
+  async initCloudDB() {
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) return;
+
+    try {
+      const { MongoClient } = require('mongodb');
+      const client = new MongoClient(mongoUri);
+      await client.connect();
+      this.mongoClient = client;
+      this.mongoCollection = client.db('noo_finance').collection('store');
+      console.log('☁️ ĐÃ KẾT NỐI CLOUD DATABASE (MONGODB ATLAS) THÀNH CÔNG!');
+
+      // Load data từ cloud
+      const cloudDoc = await this.mongoCollection.findOne({ _id: 'main_data' });
+      if (cloudDoc && cloudDoc.data) {
+        this.data = cloudDoc.data;
+        fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf8');
+        console.log('☁️ Đã đồng bộ dữ liệu mới nhất từ Cloud MongoDB!');
+      } else {
+        // Upload local data lên cloud lần đầu
+        await this.mongoCollection.updateOne(
+          { _id: 'main_data' },
+          { $set: { data: this.data, updatedAt: new Date() } },
+          { upsert: true }
+        );
+      }
+    } catch (err) {
+      console.warn('⚠️ Không thể kết nối Cloud MongoDB:', err.message);
+    }
+  }
+
+  // Đồng bộ lên Cloud MongoDB khi có thay đổi
+  async syncToCloud() {
+    if (this.mongoCollection) {
+      try {
+        await this.mongoCollection.updateOne(
+          { _id: 'main_data' },
+          { $set: { data: this.data, updatedAt: new Date() } },
+          { upsert: true }
+        );
+      } catch (e) {
+        console.error('Lỗi sync Cloud:', e.message);
+      }
+    }
+  }
+
   // Reset to defaults
   resetToDefaults() {
     this.save(JSON.parse(JSON.stringify(cleanInitialData)));
@@ -478,3 +659,4 @@ class Database {
 }
 
 module.exports = new Database();
+

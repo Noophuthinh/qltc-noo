@@ -145,3 +145,25 @@ export async function importDatabase(jsonData) {
   });
   return res.json();
 }
+
+export async function importExcelFile(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const res = await fetch(`${BASE_URL}/import/excel`, {
+    method: 'POST',
+    body: formData
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'Lỗi khi nhập file Excel');
+  }
+  return res.json();
+}
+
+export async function fetchDBStatus() {
+  const res = await fetch(`${BASE_URL}/status/db`);
+  if (!res.ok) throw new Error('Không thể kiểm tra trạng thái DB');
+  return res.json();
+}
+
