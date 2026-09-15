@@ -19,6 +19,7 @@ import {
   fetchAllData,
   fetchAnalytics,
   syncTHS,
+  syncGoogleSheet,
   createTransaction,
   updateTransaction,
   deleteTransaction,
@@ -102,6 +103,23 @@ export default function App() {
       alert('Lỗi khi đồng bộ: ' + err.message);
     } finally {
       setIsSyncingTHS(false);
+    }
+  };
+
+  const handleSyncGoogleSheet = async () => {
+    try {
+      setIsLoading(true);
+      const res = await syncGoogleSheet();
+      if (res.addedCount > 0) {
+        alert(`📊 Đã đồng bộ từ Google Sheet!\n- Thêm mới: ${res.addedCount} giao dịch`);
+      } else {
+        alert(`📊 Đã kết nối và kiểm tra Google Sheet thành công! (Hiện có ${res.sheetTotal || 0} dòng)`);
+      }
+      await loadAll(selectedMonth, selectedYear);
+    } catch (err) {
+      alert('Lỗi đồng bộ Google Sheet: ' + err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -231,6 +249,7 @@ export default function App() {
                 onOpenNewTx={() => setIsNewTxOpen(true)}
                 onEditTx={(tx) => setEditingTx(tx)}
                 onDeleteTx={handleDeleteTx}
+                onSyncGoogleSheet={handleSyncGoogleSheet}
               />
             )}
 
@@ -281,6 +300,7 @@ export default function App() {
                 onDeleteIncomeSource={handleDeleteIncomeSource}
                 onSyncTHS={handleSyncTHS}
                 isSyncingTHS={isSyncingTHS}
+                onSyncGoogleSheet={handleSyncGoogleSheet}
                 onReload={() => loadAll(selectedMonth, selectedYear)}
               />
             )}

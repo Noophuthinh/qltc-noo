@@ -9,9 +9,22 @@ const PORT = process.env.PORT || 8888;
 app.use(cors());
 app.use(express.json());
 
-// API: Lấy toàn bộ dữ liệu
-app.get('/api/data', (req, res) => {
+// API: Lấy toàn bộ dữ liệu (hỗ trợ tự động hỏi Google Sheet)
+app.get('/api/data', async (req, res) => {
+  if (req.query.syncGSheet === 'true') {
+    await db.syncGoogleSheetData();
+  }
   res.json(db.getData());
+});
+
+// API: Đồng bộ trực tiếp từ Google Sheet (16fJEGPnYfesl472G9QP9G0spdguhXf9cUyIr8AP8F2E)
+app.get('/api/gsheet/sync', async (req, res) => {
+  try {
+    const result = await db.syncGoogleSheetData();
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 // API: Thống kê & Phân tích tổng quan (Dashboard Analytics)
@@ -410,8 +423,13 @@ app.post('/api/reset', (req, res) => {
   res.json({ success: true, message: 'Đã khôi phục dữ liệu ban đầu', data });
 });
 
-// Khởi tạo Cloud DB
+// Khởi tạo Cloud DB & Tự động hỏi cơ sở dữ liệu Google Sheet
 db.initCloudDB();
+db.syncGoogleSheetData().then(res => {
+  if (res && res.sheetTotal > 0) {
+    console.log(`📊 ĐÃ ĐỒNG BỘ ${res.sheetTotal} GIAO DỊCH TỪ GOOGLE SHEET THÀNH CÔNG!`);
+  }
+}).catch(() => {});
 
 // Phục vụ frontend static nếu đã build
 const distPath = path.join(__dirname, '..', 'dist');

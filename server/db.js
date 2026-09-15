@@ -673,6 +673,47 @@ class Database {
     return this.data;
   }
 
+  // Đồng bộ dữ liệu từ Google Sheet (16fJEGPnYfesl472G9QP9G0spdguhXf9cUyIr8AP8F2E)
+  async syncGoogleSheetData() {
+    try {
+      const { fetchGoogleSheetTransactions } = require('./googleSheet');
+      const gsheetTxs = await fetchGoogleSheetTransactions();
+      if (!gsheetTxs || gsheetTxs.length === 0) {
+        return { success: true, count: 0, message: 'Google Sheet trống hoặc chưa có dữ liệu giao dịch' };
+      }
+
+      const serverTxs = this.data.transactions || [];
+      const existingMap = new Set(serverTxs.map(t => `${t.date}-${t.amount}-${t.type}`));
+      let added = 0;
+
+      for (const gt of gsheetTxs) {
+        const key = `${gt.date}-${gt.amount}-${gt.type}`;
+        if (!existingMap.has(key)) {
+          serverTxs.push(gt);
+          existingMap.add(key);
+          added++;
+        }
+      }
+
+      if (added > 0) {
+        serverTxs.sort((a, b) => new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt));
+        this.data.transactions = serverTxs;
+        this.recalculateBalances();
+        this.save();
+      }
+
+      return {
+        success: true,
+        sheetTotal: gsheetTxs.length,
+        addedCount: added,
+        totalNow: serverTxs.length
+      };
+    } catch (e) {
+      console.error('Lỗi khi đồng bộ Google Sheet:', e);
+      return { success: false, error: e.message };
+    }
+  }
+
   // Reset to defaults
   resetToDefaults() {
     this.save(JSON.parse(JSON.stringify(cleanInitialData)));

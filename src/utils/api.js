@@ -161,9 +161,10 @@ export async function importExcelFile(file) {
   return res.json();
 }
 
-export async function fetchDBStatus() {
-  const res = await fetch(`${BASE_URL}/status/db`);
-  if (!res.ok) throw new Error('Không thể kiểm tra trạng thái DB');
+export async function syncGoogleSheet() {
+  const res = await fetch(`${BASE_URL}/gsheet/sync`);
+  if (!res.ok) throw new Error('Không thể đồng bộ từ Google Sheet');
   return res.json();
 }
+
 

@@ -13,7 +13,9 @@ import {
   Coins,
   Edit3,
   RefreshCw,
-  Trash
+  Trash,
+  ExternalLink,
+  Database
 } from 'lucide-react';
 import { resetDatabase, importDatabase, cleanWipeData, syncTHS } from '../utils/api';
 import { formatVND } from '../utils/formatters';
@@ -25,11 +27,27 @@ export default function SettingsPage({
   onDeleteIncomeSource,
   onSyncTHS,
   isSyncingTHS,
+  onSyncGoogleSheet,
   onReload
 }) {
   const [newSourceName, setNewSourceName] = useState('');
   const [newSourceCat, setNewSourceCat] = useState('Đầu tư / Kinh doanh');
   const [newSourceTarget, setNewSourceTarget] = useState('');
+  const [isSyncingGSheet, setIsSyncingGSheet] = useState(false);
+
+  const handleSyncGSheetClick = async () => {
+    if (!onSyncGoogleSheet) return;
+    setIsSyncingGSheet(true);
+    try {
+      const res = await onSyncGoogleSheet();
+      alert(`🎉 Đã đồng bộ Google Sheet thành công!\n- Tổng đọc được: ${res?.totalRead || 0} dòng\n- Giao dịch mới thêm: ${res?.addedCount || 0}`);
+      onReload();
+    } catch (err) {
+      alert('❌ Lỗi đồng bộ Google Sheet: ' + err.message);
+    } finally {
+      setIsSyncingGSheet(false);
+    }
+  };
 
   const handleAddSource = async (e) => {
     e.preventDefault();
@@ -212,7 +230,81 @@ export default function SettingsPage({
         </div>
       </div>
 
-      {/* Section 2: Quản lý Dữ liệu & Tích hợp Excel / Cloud */}
+      {/* Section 2: Đồng bộ Google Sheet Database Bền Vững */}
+      <div className="bg-slate-900/90 rounded-2xl border border-emerald-500/30 p-6 shadow-xl space-y-4 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <Database className="w-5 h-5 text-emerald-400" />
+              Cơ Sở Dữ Liệu Google Sheet (Bền Vững)
+            </h3>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Mỗi khi mở ứng dụng, hệ thống tự động kết nối và nạp dữ liệu từ Google Sheet của bạn. Không lo mất dữ liệu khi server Render khởi động lại!
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleSyncGSheetClick}
+              disabled={isSyncingGSheet}
+              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center space-x-2 shadow-lg shadow-emerald-600/30 transition-all active:scale-95"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isSyncingGSheet ? 'animate-spin' : ''}`} />
+              <span>{isSyncingGSheet ? 'Đang đồng bộ...' : 'Đồng bộ ngay'}</span>
+            </button>
+            <a
+              href="https://docs.google.com/spreadsheets/d/16fJEGPnYfesl472G9QP9G0spdguhXf9cUyIr8AP8F2E/edit?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 flex items-center space-x-1.5 transition-colors"
+            >
+              <span>Mở Google Sheet</span>
+              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+            </a>
+          </div>
+        </div>
+
+        <div className="bg-slate-950/80 rounded-xl p-4 border border-slate-800 space-y-2">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-slate-400">Google Sheet ID đang liên kết:</span>
+            <span className="font-mono text-emerald-400 font-semibold bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/20">
+              16fJEGPnYfesl472G9QP9G0spdguhXf9cUyIr8AP8F2E
+            </span>
+          </div>
+          <div className="text-[11px] text-slate-400">
+            <p className="font-semibold text-slate-300 mb-1">📋 Cấu trúc các cột chuẩn khi nhập dữ liệu trên Google Sheet:</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-center text-[10px]">
+              <div className="bg-slate-900 p-1.5 rounded border border-slate-800">
+                <div className="text-slate-500 font-mono">Cột A</div>
+                <div className="text-slate-200 font-medium">Thời gian (Ngày)</div>
+              </div>
+              <div className="bg-slate-900 p-1.5 rounded border border-slate-800">
+                <div className="text-slate-500 font-mono">Cột B</div>
+                <div className="text-emerald-400 font-medium">Thu nhập / Chi tiêu</div>
+              </div>
+              <div className="bg-slate-900 p-1.5 rounded border border-slate-800">
+                <div className="text-slate-500 font-mono">Cột C</div>
+                <div className="text-slate-200 font-medium">Khoản mục / Nguồn thu</div>
+              </div>
+              <div className="bg-slate-900 p-1.5 rounded border border-slate-800">
+                <div className="text-slate-500 font-mono">Cột D</div>
+                <div className="text-amber-400 font-medium">Số tiền (VNĐ)</div>
+              </div>
+              <div className="bg-slate-900 p-1.5 rounded border border-slate-800">
+                <div className="text-slate-500 font-mono">Cột E</div>
+                <div className="text-slate-200 font-medium">Ví thanh toán</div>
+              </div>
+              <div className="bg-slate-900 p-1.5 rounded border border-slate-800">
+                <div className="text-slate-500 font-mono">Cột F</div>
+                <div className="text-slate-200 font-medium">Ghi chú</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Section 3: Quản lý Dữ liệu & Tích hợp Excel / Cloud */}
       <div className="bg-slate-900/90 rounded-2xl border border-slate-800/80 p-6 shadow-xl space-y-4">
         <div>
           <h3 className="text-base font-bold text-white flex items-center gap-2">

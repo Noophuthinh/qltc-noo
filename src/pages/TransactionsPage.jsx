@@ -9,7 +9,9 @@ import {
   ArrowUpRight, 
   ArrowLeftRight, 
   Calendar,
-  FileSpreadsheet
+  FileSpreadsheet,
+  ExternalLink,
+  RefreshCw
 } from 'lucide-react';
 import { formatVND, formatDateVN } from '../utils/formatters';
 import MonthSelector from '../components/MonthSelector';
@@ -24,7 +26,8 @@ export default function TransactionsPage({
   onChangeMonth,
   onOpenNewTx,
   onEditTx,
-  onDeleteTx
+  onDeleteTx,
+  onSyncGoogleSheet
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all'); // all, income, expense, transfer
@@ -85,6 +88,21 @@ export default function TransactionsPage({
     return { income, expense, net: income - expense };
   }, [filteredTransactions]);
 
+  const [isSyncingGSheet, setIsSyncingGSheet] = useState(false);
+
+  const handleSyncGSheetClick = async () => {
+    if (!onSyncGoogleSheet) return;
+    setIsSyncingGSheet(true);
+    try {
+      const res = await onSyncGoogleSheet();
+      alert(`🎉 Đã đồng bộ từ Google Sheet!\n- Tổng đọc: ${res?.totalRead || 0} dòng\n- Giao dịch mới thêm: ${res?.addedCount || 0}`);
+    } catch (err) {
+      alert('❌ Lỗi đồng bộ Google Sheet: ' + err.message);
+    } finally {
+      setIsSyncingGSheet(false);
+    }
+  };
+
   const handleExportExcel = () => {
     window.location.href = '/api/export/excel';
   };
@@ -125,10 +143,33 @@ export default function TransactionsPage({
           </div>
           <h2 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">Sổ Giao Dịch</h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Quản lý, xuất/nhập Excel (.xlsx) và tra cứu dòng tiền theo tháng
+            Quản lý, đồng bộ Google Sheet trực tiếp, xuất/nhập Excel (.xlsx)
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2 md:gap-3">
+          {/* Nút Đồng bộ Google Sheet */}
+          <button
+            onClick={handleSyncGSheetClick}
+            disabled={isSyncingGSheet}
+            title="Đồng bộ ngay với Google Sheet (ID: 16fJEGPnYfesl472G9QP9G0spdguhXf9cUyIr8AP8F2E)"
+            className="px-3 py-2 rounded-xl bg-emerald-950/70 hover:bg-emerald-900/80 text-xs font-bold text-emerald-300 border border-emerald-600/50 flex items-center space-x-1.5 transition-colors shadow-sm"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isSyncingGSheet ? 'animate-spin text-emerald-400' : 'text-emerald-400'}`} />
+            <span>{isSyncingGSheet ? 'Đang đồng bộ...' : 'Đồng bộ Google Sheet'}</span>
+          </button>
+
+          {/* Mở Google Sheet trực tiếp */}
+          <a
+            href="https://docs.google.com/spreadsheets/d/16fJEGPnYfesl472G9QP9G0spdguhXf9cUyIr8AP8F2E/edit?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Mở bảng Google Sheet trực tiếp trên tab mới"
+            className="px-2.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 border border-slate-700 flex items-center space-x-1 transition-colors"
+          >
+            <span>Mở Sheet</span>
+            <ExternalLink className="w-3 h-3 text-slate-400" />
+          </a>
+
           {/* Nút Xuất Excel .xlsx */}
           <button
             onClick={handleExportExcel}
@@ -136,12 +177,12 @@ export default function TransactionsPage({
             className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 flex items-center space-x-1.5 transition-colors"
           >
             <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Xuất Excel (.xlsx)</span>
+            <span>Xuất Excel</span>
           </button>
 
           {/* Nút Nhập từ Excel */}
           <label className="px-3 py-2 rounded-xl bg-indigo-950/60 hover:bg-indigo-900/60 text-xs font-semibold text-indigo-200 border border-indigo-700/60 flex items-center space-x-1.5 transition-colors cursor-pointer">
-            <span>📥 Nhập từ Excel</span>
+            <span>📥 Nhập Excel</span>
             <input
               type="file"
               accept=".xlsx, .xls, .csv"
