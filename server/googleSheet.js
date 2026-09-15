@@ -139,7 +139,8 @@ async function pushAllToGoogleSheet(transactions = [], webhookUrl) {
       action: 'syncAll',
       rows
     }),
-    redirect: 'follow'
+    redirect: 'follow',
+    signal: AbortSignal.timeout(8000)
   });
 
   if (!res.ok) {
@@ -163,10 +164,11 @@ async function appendTransactionToGoogleSheet(tx, webhookUrl) {
         action: 'append',
         row
       }),
-      redirect: 'follow'
+      redirect: 'follow',
+      signal: AbortSignal.timeout(8000)
     });
   } catch (err) {
-    console.warn('Không thể gửi giao dịch tới Google Sheet Webhook:', err.message);
+    console.warn('Lỗi gửi Webhook Google Sheet:', err.message);
   }
 }
 
