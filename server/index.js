@@ -349,6 +349,16 @@ app.post('/api/import/excel', upload.single('file'), (req, res) => {
   }
 });
 
+// API: Đồng bộ hai chiều từ Client (Browser LocalStorage)
+app.post('/api/sync/client', (req, res) => {
+  try {
+    const merged = db.mergeClientData(req.body);
+    res.json({ success: true, data: merged });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
 // API: Kiểm tra trạng thái Cơ sở dữ liệu (Cloud vs Local)
 app.get('/api/status/db', (req, res) => {
   res.json({

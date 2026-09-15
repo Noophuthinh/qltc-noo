@@ -643,6 +643,36 @@ class Database {
     }
   }
 
+  // Tự động merge dữ liệu từ client (browser localStorage) khi server Render bị restart
+  mergeClientData(clientData) {
+    if (!clientData || !Array.isArray(clientData.transactions)) {
+      return this.data;
+    }
+
+    const serverTxs = this.data.transactions || [];
+    const serverMap = new Map();
+    serverTxs.forEach(t => serverMap.set(t.id, t));
+
+    let hasChanges = false;
+    for (const cTx of clientData.transactions) {
+      if (!serverMap.has(cTx.id)) {
+        serverTxs.push(cTx);
+        serverMap.set(cTx.id, cTx);
+        hasChanges = true;
+      }
+    }
+
+    if (hasChanges) {
+      serverTxs.sort((a, b) => new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt));
+      this.data.transactions = serverTxs;
+      this.recalculateBalances();
+      this.save();
+      console.log('🔄 ĐÃ TỰ ĐỘNG PHỤC HỒI DỮ LIỆU TỪ CLIENT THÀNH CÔNG! Tổng giao dịch:', serverTxs.length);
+    }
+
+    return this.data;
+  }
+
   // Reset to defaults
   resetToDefaults() {
     this.save(JSON.parse(JSON.stringify(cleanInitialData)));

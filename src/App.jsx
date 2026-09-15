@@ -32,6 +32,7 @@ import {
   updateSavingsGoal,
   deleteSavingsGoal
 } from './utils/api';
+import { syncWithServer, saveLocalBackup, getLocalBackup } from './utils/syncManager';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('dashboard');
@@ -39,15 +40,18 @@ export default function App() {
   const [selectedYear, setSelectedYear] = useState(2026); // Năm 2026
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const [data, setData] = useState({
-    incomeSources: [],
-    expenseCategories: [],
-    wallets: [],
-    budgets: [],
-    savingsGoals: [],
-    transactions: [],
-    thsData: {},
-    settings: {}
+  const [data, setData] = useState(() => {
+    const cached = getLocalBackup();
+    return cached && cached.data ? cached.data : {
+      incomeSources: [],
+      expenseCategories: [],
+      wallets: [],
+      budgets: [],
+      savingsGoals: [],
+      transactions: [],
+      thsData: {},
+      settings: {}
+    };
   });
   const [analytics, setAnalytics] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -61,14 +65,18 @@ export default function App() {
   const loadAll = async (m = selectedMonth, y = selectedYear) => {
     try {
       setIsLoading(true);
-      const [fullData, analyticsData] = await Promise.all([
-        fetchAllData(),
-        fetchAnalytics(m, y)
-      ]);
-      setData(fullData);
+      const serverData = await fetchAllData();
+      const syncedData = await syncWithServer(serverData);
+      const analyticsData = await fetchAnalytics(m, y);
+      setData(syncedData);
       setAnalytics(analyticsData);
+      saveLocalBackup(syncedData);
     } catch (err) {
       console.error('Lỗi tải dữ liệu:', err);
+      const cached = getLocalBackup();
+      if (cached && cached.data) {
+        setData(cached.data);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -109,6 +117,12 @@ export default function App() {
 
   const handleDeleteTx = async (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa giao dịch này?')) {
+      // Cập nhật local storage trước
+      const cached = getLocalBackup();
+      if (cached && cached.data && Array.isArray(cached.data.transactions)) {
+        cached.data.transactions = cached.data.transactions.filter(t => t.id !== id);
+        saveLocalBackup(cached.data);
+      }
       await deleteTransaction(id);
       await loadAll(selectedMonth, selectedYear);
     }
