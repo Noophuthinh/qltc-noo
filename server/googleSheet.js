@@ -1,6 +1,34 @@
 const SHEET_ID = process.env.GOOGLE_SHEET_ID || '16fJEGPnYfesl472G9QP9G0spdguhXf9cUyIr8AP8F2E';
 const DEFAULT_WEBHOOK_URL = process.env.GOOGLE_SHEET_WEBHOOK || 'https://script.google.com/macros/s/AKfycbx_DejBzN1Buv-DNbCIgwAvWruRUqbewIUFjMYFMg3Muk0TH2W97rz0mh-UOVlw0qH2/exec';
 
+function parseVNOrGSheetDate(cell) {
+  if (!cell) return new Date().toISOString();
+  
+  // 1. Ưu tiên chuỗi hiển thị format dd/MM/yyyy từ cell.f hoặc cell.v
+  const str = String(cell.f || cell.v || '').trim();
+  const dmyMatch = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if (dmyMatch) {
+    const day = parseInt(dmyMatch[1], 10);
+    const month = parseInt(dmyMatch[2], 10) - 1;
+    const year = parseInt(dmyMatch[3], 10);
+    return new Date(Date.UTC(year, month, day, 12, 0, 0)).toISOString();
+  }
+
+  // 2. Nếu là GViz Date(yyyy, m, d)
+  const val = String(cell.v || '');
+  if (val.startsWith('Date(')) {
+    const parts = val.replace('Date(', '').replace(')', '').split(',').map(Number);
+    // Trong Google GViz Date(yyyy, mm, dd), mm là 0-indexed
+    return new Date(Date.UTC(parts[0], parts[1], parts[2] || 1, parts[3] || 12, parts[4] || 0)).toISOString();
+  }
+
+  // 3. Fallback ISO
+  const d = new Date(val);
+  if (!isNaN(d.getTime())) return d.toISOString();
+
+  return new Date().toISOString();
+}
+
 async function fetchGoogleSheetTransactions() {
   try {
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
@@ -31,14 +59,12 @@ async function fetchGoogleSheetTransactions() {
         return cells[colIndex].v !== null && cells[colIndex].v !== undefined ? cells[colIndex].v : '';
       };
 
-      // Nhận diện cột theo tên header hoặc theo vị trí chuẩn:
       // Col 0: ID / Thời gian
       // Col 1: Phân loại (Thu/Chi)
       // Col 2: Khoản mục / Nguồn thu
       // Col 3: Số tiền (VNĐ)
       // Col 4: Ví
       // Col 5: Ghi chú
-      const timeVal = getVal(0);
       const typeVal = String(getVal(1) || '').toLowerCase();
       const nameVal = String(getVal(2) || 'Giao dịch');
       const amountVal = Number(getVal(3) || 0);
@@ -51,19 +77,7 @@ async function fetchGoogleSheetTransactions() {
       const isExp = typeVal.includes('chi') || typeVal.includes('expense');
       const type = isInc ? 'income' : isExp ? 'expense' : 'income';
 
-      let dateIso = new Date().toISOString();
-      if (timeVal) {
-        // GViz can return "Date(2026,8,10,6,27,0)" or string
-        if (typeof timeVal === 'string' && timeVal.startsWith('Date(')) {
-          const dParts = timeVal.replace('Date(', '').replace(')', '').split(',').map(Number);
-          dateIso = new Date(dParts[0], dParts[1], dParts[2], dParts[3] || 0, dParts[4] || 0).toISOString();
-        } else {
-          const d = new Date(timeVal);
-          if (!isNaN(d.getTime())) {
-            dateIso = d.toISOString();
-          }
-        }
-      }
+      const dateIso = parseVNOrGSheetDate(cells[0]);
 
       transactions.push({
         id: `tx-gsheet-${idx}-${amountVal}`,
