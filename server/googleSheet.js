@@ -1,4 +1,5 @@
 const SHEET_ID = process.env.GOOGLE_SHEET_ID || '16fJEGPnYfesl472G9QP9G0spdguhXf9cUyIr8AP8F2E';
+const DEFAULT_WEBHOOK_URL = process.env.GOOGLE_SHEET_WEBHOOK || 'https://script.google.com/macros/s/AKfycbx_DejBzN1Buv-DNbCIgwAvWruRUqbewIUFjMYFMg3Muk0TH2W97rz0mh-UOVlw0qH2/exec';
 
 async function fetchGoogleSheetTransactions() {
   try {
@@ -101,16 +102,18 @@ function formatTxRow(t) {
 
 // Đẩy toàn bộ danh sách giao dịch lên Google Sheet qua Apps Script Webhook
 async function pushAllToGoogleSheet(transactions = [], webhookUrl) {
-  if (!webhookUrl) throw new Error('Chưa cấu hình Google Apps Script Webhook URL');
+  const targetUrl = webhookUrl || DEFAULT_WEBHOOK_URL;
+  if (!targetUrl) throw new Error('Chưa cấu hình Google Apps Script Webhook URL');
   const rows = transactions.map(formatTxRow);
   
-  const res = await fetch(webhookUrl, {
+  const res = await fetch(targetUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       action: 'syncAll',
       rows
-    })
+    }),
+    redirect: 'follow'
   });
 
   if (!res.ok) {
@@ -123,16 +126,18 @@ async function pushAllToGoogleSheet(transactions = [], webhookUrl) {
 
 // Thêm 1 giao dịch mới trực tiếp vào Google Sheet qua Webhook
 async function appendTransactionToGoogleSheet(tx, webhookUrl) {
-  if (!webhookUrl) return;
+  const targetUrl = webhookUrl || DEFAULT_WEBHOOK_URL;
+  if (!targetUrl) return;
   try {
     const row = formatTxRow(tx);
-    await fetch(webhookUrl, {
+    await fetch(targetUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         action: 'append',
         row
-      })
+      }),
+      redirect: 'follow'
     });
   } catch (err) {
     console.warn('Không thể gửi giao dịch tới Google Sheet Webhook:', err.message);
@@ -141,6 +146,7 @@ async function appendTransactionToGoogleSheet(tx, webhookUrl) {
 
 module.exports = {
   SHEET_ID,
+  DEFAULT_WEBHOOK_URL,
   fetchGoogleSheetTransactions,
   formatTxRow,
   pushAllToGoogleSheet,

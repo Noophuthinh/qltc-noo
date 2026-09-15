@@ -451,7 +451,8 @@
     "currencySymbol": "₫",
     "theme": "dark",
     "userName": "Noo",
-    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256"
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256",
+    "googleSheetWebhookUrl": "https://script.google.com/macros/s/AKfycbx_DejBzN1Buv-DNbCIgwAvWruRUqbewIUFjMYFMg3Muk0TH2W97rz0mh-UOVlw0qH2/exec"
   },
   "thsData": {
     "lastSync": "2026-09-03T08:40:09.091Z",

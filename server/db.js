@@ -107,7 +107,8 @@ const cleanInitialData = {
     currency: 'VND',
     currencySymbol: '₫',
     theme: 'dark',
-    userName: 'Thịnh (Noo)'
+    userName: 'Thịnh (Noo)',
+    googleSheetWebhookUrl: 'https://script.google.com/macros/s/AKfycbx_DejBzN1Buv-DNbCIgwAvWruRUqbewIUFjMYFMg3Muk0TH2W97rz0mh-UOVlw0qH2/exec'
   }
 };
 

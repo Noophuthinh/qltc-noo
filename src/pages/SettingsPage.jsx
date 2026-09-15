@@ -41,7 +41,7 @@ export default function SettingsPage({
   const [newSourceTarget, setNewSourceTarget] = useState('');
   const [isSyncingGSheet, setIsSyncingGSheet] = useState(false);
   const [isPushingGSheet, setIsPushingGSheet] = useState(false);
-  const [webhookUrlInput, setWebhookUrlInput] = useState(() => localStorage.getItem('noo_gsheet_webhook') || '');
+  const [webhookUrlInput, setWebhookUrlInput] = useState(() => localStorage.getItem('noo_gsheet_webhook') || 'https://script.google.com/macros/s/AKfycbx_DejBzN1Buv-DNbCIgwAvWruRUqbewIUFjMYFMg3Muk0TH2W97rz0mh-UOVlw0qH2/exec');
   const [showScriptGuide, setShowScriptGuide] = useState(false);
   const [copiedSheet, setCopiedSheet] = useState(false);
   const [copiedScript, setCopiedScript] = useState(false);
