@@ -273,6 +273,10 @@ app.put('/api/transactions/:id', (req, res) => {
   try {
     const tx = db.updateTransaction(req.params.id, req.body);
     if (!tx) return res.status(404).json({ error: 'Không tìm thấy giao dịch' });
+    const webhookUrl = db.getData().settings?.googleSheetWebhookUrl;
+    if (webhookUrl) {
+      pushAllToGoogleSheet(db.getTransactions(), webhookUrl).catch(() => {});
+    }
     res.json(tx);
   } catch (e) {
     res.status(400).json({ error: e.message });
@@ -282,6 +286,10 @@ app.put('/api/transactions/:id', (req, res) => {
 app.delete('/api/transactions/:id', (req, res) => {
   const ok = db.deleteTransaction(req.params.id);
   if (!ok) return res.status(404).json({ error: 'Không tìm thấy giao dịch' });
+  const webhookUrl = db.getData().settings?.googleSheetWebhookUrl;
+  if (webhookUrl) {
+    pushAllToGoogleSheet(db.getTransactions(), webhookUrl).catch(() => {});
+  }
   res.json({ success: true, message: 'Đã xóa giao dịch thành công' });
 });
 
