@@ -22,49 +22,43 @@ export default function EditTransactionModal({
   const [note, setNote] = useState(transaction.note || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!amount || Number(amount) <= 0) {
-      alert('Vui lòng nhập số tiền hợp lệ');
+      alert('Vui lòng nhập số tiền hợp lệ lớn hơn 0');
       return;
     }
 
-    setIsSubmitting(true);
-    try {
-      const selectedSource = incomeSources.find(s => s.id === incomeSourceId);
-      const selectedCat = expenseCategories.find(c => c.id === categoryId);
-      const selectedWallet = wallets.find(w => w.id === walletId);
+    const selectedSource = incomeSources.find(s => s.id === incomeSourceId);
+    const selectedCat = expenseCategories.find(c => c.id === categoryId);
+    const selectedWallet = wallets.find(w => w.id === walletId);
 
-      const payload = {
-        amount: Number(amount),
-        walletId,
-        walletName: selectedWallet?.name || '',
-        date: new Date(date).toISOString(),
-        note: note.trim()
-      };
+    const payload = {
+      amount: Number(amount),
+      walletId,
+      walletName: selectedWallet?.name || '',
+      date: new Date(date).toISOString(),
+      note: note.trim()
+    };
 
-      if (transaction.type === 'income') {
-        payload.incomeSourceId = incomeSourceId;
-        payload.incomeSourceName = selectedSource?.name || 'Không xác định';
-        payload.category = selectedSource?.category || 'Thu nhập';
-      } else if (transaction.type === 'expense') {
-        payload.categoryId = categoryId;
-        payload.categoryName = selectedCat?.name || 'Chi tiêu';
-      }
-
-      await onUpdate(transaction.id, payload);
-      onClose();
-    } catch (err) {
-      alert('Lỗi: ' + err.message);
-    } finally {
-      setIsSubmitting(false);
+    if (transaction.type === 'income') {
+      payload.incomeSourceId = incomeSourceId;
+      payload.incomeSourceName = selectedSource?.name || 'Không xác định';
+      payload.category = selectedSource?.category || 'Thu nhập';
+    } else if (transaction.type === 'expense') {
+      payload.categoryId = categoryId;
+      payload.categoryName = selectedCat?.name || 'Chi tiêu';
     }
+
+    // Đóng popup ngay tức thì
+    onClose();
+    onUpdate(transaction.id, payload);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (window.confirm('Bạn có chắc chắn muốn xóa giao dịch này?')) {
-      await onDelete(transaction.id);
       onClose();
+      onDelete(transaction.id);
     }
   };
 

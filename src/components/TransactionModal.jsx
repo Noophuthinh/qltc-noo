@@ -45,48 +45,42 @@ export default function TransactionModal({
     setAmount(String(current + val));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!amount || Number(amount) <= 0) {
       alert('Vui lòng nhập số tiền hợp lệ lớn hơn 0');
       return;
     }
 
-    setIsSubmitting(true);
-    try {
-      const selectedSource = incomeSources.find(s => s.id === incomeSourceId);
-      const selectedCat = expenseCategories.find(c => c.id === categoryId);
-      const selectedWallet = wallets.find(w => w.id === walletId);
-      const selectedToWallet = wallets.find(w => w.id === toWalletId);
+    const selectedSource = incomeSources.find(s => s.id === incomeSourceId);
+    const selectedCat = expenseCategories.find(c => c.id === categoryId);
+    const selectedWallet = wallets.find(w => w.id === walletId);
+    const selectedToWallet = wallets.find(w => w.id === toWalletId);
 
-      const payload = {
-        type,
-        amount: Number(amount),
-        walletId,
-        walletName: selectedWallet?.name || '',
-        date: new Date(date).toISOString(),
-        note: note.trim()
-      };
+    const payload = {
+      type,
+      amount: Number(amount),
+      walletId,
+      walletName: selectedWallet?.name || '',
+      date: new Date(date).toISOString(),
+      note: note.trim()
+    };
 
-      if (type === 'income') {
-        payload.incomeSourceId = incomeSourceId;
-        payload.incomeSourceName = selectedSource?.name || 'Không xác định';
-        payload.category = selectedSource?.category || 'Thu nhập';
-      } else if (type === 'expense') {
-        payload.categoryId = categoryId;
-        payload.categoryName = selectedCat?.name || 'Chi tiêu';
-      } else if (type === 'transfer') {
-        payload.toWalletId = toWalletId;
-        payload.toWalletName = selectedToWallet?.name || '';
-      }
-
-      await onSubmit(payload);
-      onClose();
-    } catch (err) {
-      alert('Có lỗi xảy ra: ' + err.message);
-    } finally {
-      setIsSubmitting(false);
+    if (type === 'income') {
+      payload.incomeSourceId = incomeSourceId;
+      payload.incomeSourceName = selectedSource?.name || 'Không xác định';
+      payload.category = selectedSource?.category || 'Thu nhập';
+    } else if (type === 'expense') {
+      payload.categoryId = categoryId;
+      payload.categoryName = selectedCat?.name || 'Chi tiêu';
+    } else if (type === 'transfer') {
+      payload.toWalletId = toWalletId;
+      payload.toWalletName = selectedToWallet?.name || '';
     }
+
+    // Đóng modal ngay tức khắc (0.001s)
+    onClose();
+    onSubmit(payload);
   };
 
   return (
