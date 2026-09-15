@@ -378,7 +378,7 @@ class Database {
       const thsWallet = this.data.wallets.find(w => w.id === 'wal-4') || this.data.wallets[0];
       const thsSource = this.data.incomeSources.find(s => s.id === 'inc-2');
 
-      // Xóa các transaction THS tự động đã sync trước đó để tránh trùng
+      // Xóa các transaction THS tự động đã sync trước đó để giữ sổ giao dịch hoàn toàn theo ý người dùng
       this.data.transactions = this.data.transactions.filter(t => !t.isTHSAutoSync);
 
       let totalThinhProfit = 0;
@@ -395,38 +395,6 @@ class Database {
         if (thinhShare > 0) {
           totalThinhProfit += thinhShare;
 
-          // Parse month / year từ chuỗi "Tháng 8 2026"
-          const parts = mKey.match(/(\d+)\s*(\d{4})/);
-          let txDate = new Date();
-          if (parts) {
-            const m = parseInt(parts[1], 10) - 1;
-            const y = parseInt(parts[2], 10);
-            txDate = new Date(y, m, 28, 10, 0, 0); // Ngày cuối tháng
-          }
-
-          const syncTx = {
-            id: `tx-ths-sync-${mKey.replace(/\s+/g, '-').toLowerCase()}`,
-            type: 'income',
-            amount: thinhShare,
-            incomeSourceId: 'inc-2',
-            incomeSourceName: 'Quỹ Đầu tư THS',
-            category: 'Đầu tư tài chính (Đồng hồ Chrono)',
-            walletId: thsWallet.id,
-            walletName: thsWallet.name,
-            date: txDate.toISOString(),
-            note: `Lợi nhuận cổ đông Thịnh (42.86%) - ${mKey} [THS Chrono Online]`,
-            isTHSAutoSync: true,
-            thsDetails: {
-              month: mKey,
-              revenue: summary.revenue,
-              profit: summary.profit,
-              ceoSalary: summary.ceo_salary,
-              salesCount: mData.sales ? mData.sales.length : 0
-            },
-            createdAt: txDate.toISOString()
-          };
-
-          this.data.transactions.push(syncTx);
           syncedReports.push({
             month: mKey,
             amount: thinhShare,
