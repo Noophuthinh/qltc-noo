@@ -295,6 +295,7 @@ export default function App() {
             {currentTab === 'settings' && (
               <SettingsPage
                 incomeSources={data.incomeSources}
+                transactions={data.transactions}
                 onCreateIncomeSource={handleCreateIncomeSource}
                 onEditIncomeSource={(s) => setEditingSource(s)}
                 onDeleteIncomeSource={handleDeleteIncomeSource}

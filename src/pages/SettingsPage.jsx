@@ -15,13 +15,15 @@ import {
   RefreshCw,
   Trash,
   ExternalLink,
-  Database
+  Database,
+  Copy
 } from 'lucide-react';
 import { resetDatabase, importDatabase, cleanWipeData, syncTHS } from '../utils/api';
 import { formatVND } from '../utils/formatters';
 
 export default function SettingsPage({
   incomeSources = [],
+  transactions = [],
   onCreateIncomeSource,
   onEditIncomeSource,
   onDeleteIncomeSource,
@@ -34,6 +36,30 @@ export default function SettingsPage({
   const [newSourceCat, setNewSourceCat] = useState('Đầu tư / Kinh doanh');
   const [newSourceTarget, setNewSourceTarget] = useState('');
   const [isSyncingGSheet, setIsSyncingGSheet] = useState(false);
+  const [copiedSheet, setCopiedSheet] = useState(false);
+
+  const handleCopySheetData = () => {
+    const header = ['Thời gian', 'Phân loại', 'Khoản mục / Nguồn', 'Số tiền (VNĐ)', 'Ví thanh toán', 'Ghi chú'].join('\t');
+    const rows = transactions.map(t => {
+      const d = new Date(t.date || t.createdAt);
+      const dateStr = (d.getDate()<10?'0':'')+d.getDate() + '/' + ((d.getMonth()+1)<10?'0':'')+(d.getMonth()+1) + '/' + d.getFullYear();
+      const typeStr = t.type === 'income' ? 'Thu nhập' : 'Chi tiêu';
+      const catStr = t.type === 'income' ? (t.incomeSourceName || t.category || 'Nguồn khác') : (t.categoryName || 'Chi phí khác');
+      const amountStr = t.amount;
+      const walletStr = t.walletName || 'Tài khoản Ngân hàng (Chính)';
+      const noteStr = t.note || '';
+      return [dateStr, typeStr, catStr, amountStr, walletStr, noteStr].join('\t');
+    });
+
+    const content = [header, ...rows].join('\n');
+    navigator.clipboard.writeText(content).then(() => {
+      setCopiedSheet(true);
+      setTimeout(() => setCopiedSheet(false), 3000);
+      alert(`📋 Đã sao chép ${transactions.length} giao dịch vào Clipboard!\n\n👉 Bạn chỉ cần: Mở Google Sheet -> Bấm vào ô A1 -> Nhấn Ctrl + V (Dán) là xong ngay!`);
+    }).catch(() => {
+      alert('Không thể tự sao chép, vui lòng tải file Excel hoặc cho phép quyền Clipboard.');
+    });
+  };
 
   const handleSyncGSheetClick = async () => {
     if (!onSyncGoogleSheet) return;
@@ -244,7 +270,7 @@ export default function SettingsPage({
               Mỗi khi mở ứng dụng, hệ thống tự động kết nối và nạp dữ liệu từ Google Sheet của bạn. Không lo mất dữ liệu khi server Render khởi động lại!
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={handleSyncGSheetClick}
               disabled={isSyncingGSheet}
@@ -252,6 +278,13 @@ export default function SettingsPage({
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSyncingGSheet ? 'animate-spin' : ''}`} />
               <span>{isSyncingGSheet ? 'Đang đồng bộ...' : 'Đồng bộ ngay'}</span>
+            </button>
+            <button
+              onClick={handleCopySheetData}
+              className="px-3 py-2 rounded-xl bg-amber-950/60 hover:bg-amber-900/70 text-amber-300 text-xs font-semibold border border-amber-600/40 flex items-center space-x-1.5 transition-colors"
+            >
+              {copiedSheet ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-amber-400" />}
+              <span>{copiedSheet ? 'Đã sao chép!' : 'Sao chép để Dán Sheet'}</span>
             </button>
             <a
               href="https://docs.google.com/spreadsheets/d/16fJEGPnYfesl472G9QP9G0spdguhXf9cUyIr8AP8F2E/edit?usp=sharing"
