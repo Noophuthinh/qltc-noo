@@ -104,8 +104,20 @@ async function fetchGoogleSheetTransactions() {
 
 // Chuyển đổi giao dịch thành mảng hàng cho Google Sheet
 function formatTxRow(t) {
+  let dateStr = '';
   const d = new Date(t.date || t.createdAt);
-  const dateStr = (d.getDate() < 10 ? '0' : '') + d.getDate() + '/' + ((d.getMonth() + 1) < 10 ? '0' : '') + (d.getMonth() + 1) + '/' + d.getFullYear();
+  if (!isNaN(d.getTime())) {
+    const y = d.getFullYear();
+    const m = (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1);
+    const day = (d.getDate() < 10 ? '0' : '') + d.getDate();
+    dateStr = `${day}/${m}/${y}`;
+  } else {
+    const today = new Date();
+    const y = today.getFullYear();
+    const m = (today.getMonth() + 1 < 10 ? '0' : '') + (today.getMonth() + 1);
+    const day = (today.getDate() < 10 ? '0' : '') + today.getDate();
+    dateStr = `${day}/${m}/${y}`;
+  }
   const typeStr = t.type === 'income' ? 'Thu nhập' : 'Chi tiêu';
   const catStr = t.type === 'income' ? (t.incomeSourceName || t.category || 'Nguồn khác') : (t.categoryName || 'Chi phí khác');
   const amountStr = Number(t.amount || 0);

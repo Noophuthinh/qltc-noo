@@ -255,13 +255,13 @@ app.get('/api/transactions', (req, res) => {
   res.json(db.getTransactions());
 });
 
-app.post('/api/transactions', (req, res) => {
+app.post('/api/transactions', async (req, res) => {
   try {
     const tx = db.addTransaction(req.body);
     // Tự động ghi trực tiếp vào Google Sheet nếu có cấu hình Webhook
     const webhookUrl = db.getData().settings?.googleSheetWebhookUrl;
     if (webhookUrl) {
-      appendTransactionToGoogleSheet(tx, webhookUrl);
+      await appendTransactionToGoogleSheet(tx, webhookUrl).catch(err => console.warn(err.message));
     }
     res.status(201).json(tx);
   } catch (e) {
@@ -269,13 +269,13 @@ app.post('/api/transactions', (req, res) => {
   }
 });
 
-app.put('/api/transactions/:id', (req, res) => {
+app.put('/api/transactions/:id', async (req, res) => {
   try {
     const tx = db.updateTransaction(req.params.id, req.body);
     if (!tx) return res.status(404).json({ error: 'Không tìm thấy giao dịch' });
     const webhookUrl = db.getData().settings?.googleSheetWebhookUrl;
     if (webhookUrl) {
-      pushAllToGoogleSheet(db.getTransactions(), webhookUrl).catch(() => {});
+      await pushAllToGoogleSheet(db.getTransactions(), webhookUrl).catch(err => console.warn(err.message));
     }
     res.json(tx);
   } catch (e) {
@@ -283,14 +283,18 @@ app.put('/api/transactions/:id', (req, res) => {
   }
 });
 
-app.delete('/api/transactions/:id', (req, res) => {
-  const ok = db.deleteTransaction(req.params.id);
-  if (!ok) return res.status(404).json({ error: 'Không tìm thấy giao dịch' });
-  const webhookUrl = db.getData().settings?.googleSheetWebhookUrl;
-  if (webhookUrl) {
-    pushAllToGoogleSheet(db.getTransactions(), webhookUrl).catch(() => {});
+app.delete('/api/transactions/:id', async (req, res) => {
+  try {
+    const ok = db.deleteTransaction(req.params.id);
+    if (!ok) return res.status(404).json({ error: 'Không tìm thấy giao dịch' });
+    const webhookUrl = db.getData().settings?.googleSheetWebhookUrl;
+    if (webhookUrl) {
+      await pushAllToGoogleSheet(db.getTransactions(), webhookUrl).catch(err => console.warn(err.message));
+    }
+    res.json({ success: true, message: 'Đã xóa giao dịch thành công' });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
   }
-  res.json({ success: true, message: 'Đã xóa giao dịch thành công' });
 });
 
 // API: Income Sources
