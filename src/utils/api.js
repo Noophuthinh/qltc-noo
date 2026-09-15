@@ -167,4 +167,25 @@ export async function syncGoogleSheet() {
   return res.json();
 }
 
+export async function pushAllToGoogleSheetApi(webhookUrl) {
+  const res = await fetch(`${BASE_URL}/gsheet/push-all`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ webhookUrl })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Lỗi khi đẩy lên Google Sheet');
+  return data;
+}
+
+export async function saveGoogleSheetWebhook(webhookUrl) {
+  const res = await fetch(`${BASE_URL}/gsheet/config`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ webhookUrl })
+  });
+  return res.json();
+}
+
+
 

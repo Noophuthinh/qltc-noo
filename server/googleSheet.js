@@ -87,7 +87,63 @@ async function fetchGoogleSheetTransactions() {
   }
 }
 
+// Chuyển đổi giao dịch thành mảng hàng cho Google Sheet
+function formatTxRow(t) {
+  const d = new Date(t.date || t.createdAt);
+  const dateStr = (d.getDate() < 10 ? '0' : '') + d.getDate() + '/' + ((d.getMonth() + 1) < 10 ? '0' : '') + (d.getMonth() + 1) + '/' + d.getFullYear();
+  const typeStr = t.type === 'income' ? 'Thu nhập' : 'Chi tiêu';
+  const catStr = t.type === 'income' ? (t.incomeSourceName || t.category || 'Nguồn khác') : (t.categoryName || 'Chi phí khác');
+  const amountStr = Number(t.amount || 0);
+  const walletStr = t.walletName || 'Tài khoản Ngân hàng (Chính)';
+  const noteStr = t.note || '';
+  return [dateStr, typeStr, catStr, amountStr, walletStr, noteStr];
+}
+
+// Đẩy toàn bộ danh sách giao dịch lên Google Sheet qua Apps Script Webhook
+async function pushAllToGoogleSheet(transactions = [], webhookUrl) {
+  if (!webhookUrl) throw new Error('Chưa cấu hình Google Apps Script Webhook URL');
+  const rows = transactions.map(formatTxRow);
+  
+  const res = await fetch(webhookUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'syncAll',
+      rows
+    })
+  });
+
+  if (!res.ok) {
+    throw new Error(`Google Apps Script phản hồi lỗi HTTP ${res.status}`);
+  }
+
+  const data = await res.json();
+  return data;
+}
+
+// Thêm 1 giao dịch mới trực tiếp vào Google Sheet qua Webhook
+async function appendTransactionToGoogleSheet(tx, webhookUrl) {
+  if (!webhookUrl) return;
+  try {
+    const row = formatTxRow(tx);
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'append',
+        row
+      })
+    });
+  } catch (err) {
+    console.warn('Không thể gửi giao dịch tới Google Sheet Webhook:', err.message);
+  }
+}
+
 module.exports = {
   SHEET_ID,
-  fetchGoogleSheetTransactions
+  fetchGoogleSheetTransactions,
+  formatTxRow,
+  pushAllToGoogleSheet,
+  appendTransactionToGoogleSheet
 };
+

@@ -16,9 +16,13 @@ import {
   Trash,
   ExternalLink,
   Database,
-  Copy
+  Copy,
+  Zap,
+  Code,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
-import { resetDatabase, importDatabase, cleanWipeData, syncTHS } from '../utils/api';
+import { resetDatabase, importDatabase, cleanWipeData, syncTHS, pushAllToGoogleSheetApi, saveGoogleSheetWebhook } from '../utils/api';
 import { formatVND } from '../utils/formatters';
 
 export default function SettingsPage({
@@ -36,7 +40,11 @@ export default function SettingsPage({
   const [newSourceCat, setNewSourceCat] = useState('Đầu tư / Kinh doanh');
   const [newSourceTarget, setNewSourceTarget] = useState('');
   const [isSyncingGSheet, setIsSyncingGSheet] = useState(false);
+  const [isPushingGSheet, setIsPushingGSheet] = useState(false);
+  const [webhookUrlInput, setWebhookUrlInput] = useState(() => localStorage.getItem('noo_gsheet_webhook') || '');
+  const [showScriptGuide, setShowScriptGuide] = useState(false);
   const [copiedSheet, setCopiedSheet] = useState(false);
+  const [copiedScript, setCopiedScript] = useState(false);
 
   const handleCopySheetData = () => {
     const header = ['Thời gian', 'Phân loại', 'Khoản mục / Nguồn', 'Số tiền (VNĐ)', 'Ví thanh toán', 'Ghi chú'].join('\t');
@@ -58,6 +66,70 @@ export default function SettingsPage({
       alert(`📋 Đã sao chép ${transactions.length} giao dịch vào Clipboard!\n\n👉 Bạn chỉ cần: Mở Google Sheet -> Bấm vào ô A1 -> Nhấn Ctrl + V (Dán) là xong ngay!`);
     }).catch(() => {
       alert('Không thể tự sao chép, vui lòng tải file Excel hoặc cho phép quyền Clipboard.');
+    });
+  };
+
+  const handlePushAllToGSheet = async () => {
+    if (!webhookUrlInput.trim()) {
+      alert('Vui lòng nhập Webhook URL của Google Apps Script bên dưới trước khi bấm ghi tự động!');
+      return;
+    }
+    setIsPushingGSheet(true);
+    try {
+      localStorage.setItem('noo_gsheet_webhook', webhookUrlInput.trim());
+      await saveGoogleSheetWebhook(webhookUrlInput.trim());
+      const res = await pushAllToGoogleSheetApi(webhookUrlInput.trim());
+      alert(`🎉 Đã ghi trực tiếp toàn bộ ${transactions.length} giao dịch vào Google Sheet thành công!`);
+    } catch (err) {
+      alert('❌ Lỗi khi ghi vào Google Sheet: ' + err.message);
+    } finally {
+      setIsPushingGSheet(false);
+    }
+  };
+
+  const handleCopyAppsScriptCode = () => {
+    const code = `function doPost(e) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var data = JSON.parse(e.postData.contents);
+    
+    if (data.action === 'syncAll' && Array.isArray(data.rows)) {
+      sheet.clearContents();
+      sheet.appendRow(['Thời gian', 'Phân loại', 'Khoản mục / Nguồn', 'Số tiền (VNĐ)', 'Ví thanh toán', 'Ghi chú']);
+      data.rows.forEach(function(r) {
+        sheet.appendRow(r);
+      });
+      return ContentService.createTextOutput(JSON.stringify({ status: 'success', count: data.rows.length }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    if (data.action === 'append' && Array.isArray(data.row)) {
+      if (sheet.getLastRow() === 0) {
+        sheet.appendRow(['Thời gian', 'Phân loại', 'Khoản mục / Nguồn', 'Số tiền (VNĐ)', 'Ví thanh toán', 'Ghi chú']);
+      }
+      sheet.appendRow(data.row);
+      return ContentService.createTextOutput(JSON.stringify({ status: 'success' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'Invalid payload' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var rows = sheet.getDataRange().getValues();
+  return ContentService.createTextOutput(JSON.stringify({ status: 'success', data: rows }))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+    navigator.clipboard.writeText(code).then(() => {
+      setCopiedScript(true);
+      setTimeout(() => setCopiedScript(false), 3000);
+      alert('📋 Đã sao chép đoạn mã Apps Script vào Clipboard!');
     });
   };
 
@@ -298,13 +370,14 @@ export default function SettingsPage({
           </div>
         </div>
 
-        <div className="bg-slate-950/80 rounded-xl p-4 border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between text-xs">
+        <div className="bg-slate-950/80 rounded-xl p-4 border border-slate-800 space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
             <span className="text-slate-400">Google Sheet ID đang liên kết:</span>
             <span className="font-mono text-emerald-400 font-semibold bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/20">
               16fJEGPnYfesl472G9QP9G0spdguhXf9cUyIr8AP8F2E
             </span>
           </div>
+
           <div className="text-[11px] text-slate-400">
             <p className="font-semibold text-slate-300 mb-1">📋 Cấu trúc các cột chuẩn khi nhập dữ liệu trên Google Sheet:</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-center text-[10px]">
@@ -333,6 +406,65 @@ export default function SettingsPage({
                 <div className="text-slate-200 font-medium">Ghi chú</div>
               </div>
             </div>
+          </div>
+
+          {/* Webhook Ghi tự động 2 chiều */}
+          <div className="pt-3 border-t border-slate-800/80 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-1.5 text-xs font-bold text-amber-300">
+                <Zap className="w-4 h-4 text-amber-400" />
+                <span>Tự động Ghi Trực Tiếp vào Google Sheet (Apps Script Webhook)</span>
+              </div>
+              <button
+                onClick={() => setShowScriptGuide(!showScriptGuide)}
+                className="text-[11px] text-indigo-400 hover:text-indigo-300 flex items-center space-x-1"
+              >
+                <span>{showScriptGuide ? 'Ẩn hướng dẫn cài đặt' : 'Xem cách cài đặt (1 phút)'}</span>
+                {showScriptGuide ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              </button>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                value={webhookUrlInput}
+                onChange={(e) => setWebhookUrlInput(e.target.value)}
+                placeholder="Dán URL Google Apps Script Webhook (https://script.google.com/macros/s/.../exec)"
+                className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+              />
+              <button
+                onClick={handlePushAllToGSheet}
+                disabled={isPushingGSheet}
+                className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs flex items-center justify-center space-x-1.5 transition-colors whitespace-nowrap active:scale-95 shadow-md shadow-amber-600/20"
+              >
+                <Zap className={`w-3.5 h-3.5 ${isPushingGSheet ? 'animate-spin' : ''}`} />
+                <span>{isPushingGSheet ? 'Đang ghi lên Sheet...' : 'Ghi Tự Động Lên Sheet'}</span>
+              </button>
+            </div>
+
+            {/* Hướng dẫn cài đặt Apps Script nếu mở */}
+            {showScriptGuide && (
+              <div className="mt-3 p-3 rounded-xl bg-slate-900 border border-indigo-900/40 text-slate-300 text-xs space-y-2.5 animate-fadeIn">
+                <p className="font-bold text-indigo-300">🛠️ Các bước bật tính năng Ghi trực tiếp (chỉ cần làm 1 lần duy nhất):</p>
+                <ol className="list-decimal list-inside space-y-1 text-slate-300 text-[11px]">
+                  <li>Mở file Google Sheet của bạn &gt; Chọn Menu <strong>Tiện ích mở rộng (Extensions)</strong> &gt; <strong>Apps Script</strong>.</li>
+                  <li>Xóa hết mã có sẵn và dán đoạn mã bên dưới vào.</li>
+                  <li>Bấm nút <strong>Triển khai (Deploy)</strong> &gt; <strong>Tùy chọn triển khai mới (New deployment)</strong>.</li>
+                  <li>Chọn loại: <strong>Ứng dụng web (Web app)</strong>.</li>
+                  <li>Mục <em>Ai có quyền truy cập (Who has access)</em>: Chọn <strong>Bất kỳ ai (Anyone)</strong> &gt; Bấm <strong>Triển khai (Deploy)</strong>.</li>
+                  <li>Sao chép <strong>URL Ứng dụng web (Web App URL)</strong> và dán vào ô bên trên rồi bấm <em>Ghi Tự Động Lên Sheet</em>!</li>
+                </ol>
+                <div className="pt-2">
+                  <button
+                    onClick={handleCopyAppsScriptCode}
+                    className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center space-x-1.5 transition-colors"
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>{copiedScript ? 'Đã sao chép mã script!' : 'Sao chép mã Apps Script'}</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

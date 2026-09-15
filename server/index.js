@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const db = require('./db');
+const { pushAllToGoogleSheet, appendTransactionToGoogleSheet } = require('./googleSheet');
 
 const app = express();
 const PORT = process.env.PORT || 8888;
@@ -25,6 +26,38 @@ app.get('/api/gsheet/sync', async (req, res) => {
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
+});
+
+// API: Đẩy toàn bộ dữ liệu hiện tại lên Google Sheet qua Apps Script Webhook
+app.post('/api/gsheet/push-all', async (req, res) => {
+  try {
+    const webhookUrl = req.body.webhookUrl || db.getData().settings?.googleSheetWebhookUrl;
+    if (!webhookUrl) {
+      return res.status(400).json({ error: 'Chưa có Webhook URL của Google Apps Script' });
+    }
+    const txs = db.getTransactions();
+    const result = await pushAllToGoogleSheet(txs, webhookUrl);
+    
+    // Lưu lại Webhook URL vào settings
+    const data = db.getData();
+    if (!data.settings) data.settings = {};
+    data.settings.googleSheetWebhookUrl = webhookUrl;
+    db.save(data);
+
+    res.json({ success: true, message: `Đã đẩy thành công ${txs.length} giao dịch lên Google Sheet!`, result });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// API: Cấu hình Google Sheet Webhook URL
+app.post('/api/gsheet/config', (req, res) => {
+  const { webhookUrl } = req.body;
+  const data = db.getData();
+  if (!data.settings) data.settings = {};
+  data.settings.googleSheetWebhookUrl = webhookUrl;
+  db.save(data);
+  res.json({ success: true, settings: data.settings });
 });
 
 // API: Thống kê & Phân tích tổng quan (Dashboard Analytics)
@@ -225,6 +258,11 @@ app.get('/api/transactions', (req, res) => {
 app.post('/api/transactions', (req, res) => {
   try {
     const tx = db.addTransaction(req.body);
+    // Tự động ghi trực tiếp vào Google Sheet nếu có cấu hình Webhook
+    const webhookUrl = db.getData().settings?.googleSheetWebhookUrl;
+    if (webhookUrl) {
+      appendTransactionToGoogleSheet(tx, webhookUrl);
+    }
     res.status(201).json(tx);
   } catch (e) {
     res.status(400).json({ error: e.message });
