@@ -66,9 +66,9 @@ app.get('/api/analytics', (req, res) => {
   const txs = data.transactions || [];
   const now = new Date();
   
-  // Lấy tháng và năm từ query params hoặc mặc định tháng 9/2026
-  const selectedMonth = req.query.month ? (parseInt(req.query.month, 10) - 1) : 8; // 8 là Tháng 9 (0-indexed)
-  const selectedYear = req.query.year ? parseInt(req.query.year, 10) : 2026;
+  // Lấy tháng và năm từ query params hoặc mặc định tháng hiện tại (Tháng 10)
+  const selectedMonth = req.query.month ? (parseInt(req.query.month, 10) - 1) : now.getMonth();
+  const selectedYear = req.query.year ? parseInt(req.query.year, 10) : now.getFullYear();
 
   // Lọc giao dịch tháng được chọn
   const thisMonthTxs = txs.filter(t => {

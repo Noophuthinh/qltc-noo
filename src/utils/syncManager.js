@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'noo_finance_master_backup_v3';
+const STORAGE_KEY = 'noo_finance_master_backup_v4';
 
 export function getLocalBackup() {
   try {
@@ -27,6 +27,7 @@ export function clearOldBackups() {
   try {
     localStorage.removeItem('noo_finance_master_backup_v1');
     localStorage.removeItem('noo_finance_master_backup_v2');
+    localStorage.removeItem('noo_finance_master_backup_v3');
   } catch (e) {}
 }
 

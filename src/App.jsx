@@ -37,8 +37,8 @@ import { syncWithServer, saveLocalBackup, getLocalBackup } from './utils/syncMan
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('dashboard');
-  const [selectedMonth, setSelectedMonth] = useState(9); // Mặc định Tháng 9
-  const [selectedYear, setSelectedYear] = useState(2026); // Năm 2026
+  const [selectedMonth, setSelectedMonth] = useState(() => new Date().getMonth() + 1); // Tự động Tháng hiện tại (Tháng 10)
+  const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear()); // Năm hiện tại
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const [data, setData] = useState(() => {
