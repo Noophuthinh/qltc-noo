@@ -25,9 +25,14 @@ export function saveLocalBackup(data) {
 
 export function clearOldBackups() {
   try {
-    localStorage.removeItem('noo_finance_master_backup_v1');
-    localStorage.removeItem('noo_finance_master_backup_v2');
-    localStorage.removeItem('noo_finance_master_backup_v3');
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && (key.startsWith('noo_finance_master_backup_') || key.startsWith('noo_finance_backup_')) && key !== STORAGE_KEY) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(k => localStorage.removeItem(k));
   } catch (e) {}
 }
 
