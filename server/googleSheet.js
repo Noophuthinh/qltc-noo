@@ -64,6 +64,20 @@ function resolveWalletId(walletName) {
   return 'wal-1'; // Mặc định Ngân hàng
 }
 
+function resolveIncomeSource(name) {
+  const s = String(name || '').toLowerCase().trim();
+  if (s.includes('lương') || s.includes('luong') || s.includes('cố định')) {
+    return { name: 'Lương hàng tháng', id: 'inc-1' };
+  }
+  if (s.includes('ths') || s.includes('chrono') || s.includes('cổ phần') || s.includes('quỹ đầu tư ths')) {
+    return { name: 'Quỹ Đầu tư THS', id: 'inc-2' };
+  }
+  if (s.includes('thành 7') || s.includes('thanh 7')) {
+    return { name: 'Quỹ Đầu tư Thành 7', id: 'inc-3' };
+  }
+  return { name: 'Không xác định', id: 'inc-4' };
+}
+
 // Đọc toàn bộ giao dịch từ các tab theo tháng và tab chung
 async function fetchGoogleSheetTransactions() {
   try {
@@ -113,18 +127,20 @@ async function fetchGoogleSheetTransactions() {
           const isInc = typeStrTemplate.includes('thu');
 
           if (amount > 0) {
+            const incSource = isInc ? resolveIncomeSource(cat) : null;
             allTransactions.push({
               id: `tx-gsheet-${lower.replace(/\s+/g, '')}-${idx}-${amount}`,
               date: dateIso,
               createdAt: dateIso,
               type: isInc ? 'income' : 'expense',
               amount,
-              incomeSourceName: isInc ? (cat || 'Lương hàng tháng') : undefined,
+              incomeSourceName: isInc ? incSource.name : undefined,
+              incomeSourceId: isInc ? incSource.id : undefined,
               categoryName: !isInc ? (cat || 'Chi phí khác') : undefined,
-              category: cat,
+              category: isInc ? incSource.name : cat,
               walletName: wallet || 'Tài khoản Ngân hàng (Chính)',
               walletId: resolveWalletId(wallet),
-              note,
+              note: isInc && incSource.name === 'Không xác định' && cat !== 'Không xác định' ? (note ? `${note} (${cat})` : cat) : note,
               source: 'GoogleSheet',
               sheetTab: tab
             });
@@ -146,18 +162,20 @@ async function fetchGoogleSheetTransactions() {
           const isInc = typeStrStd.includes('thu') || typeStrStd.includes('income');
 
           if (amount > 0) {
+            const incSource = isInc ? resolveIncomeSource(cat) : null;
             allTransactions.push({
               id: `tx-gsheet-std-${lower.replace(/\s+/g, '')}-${idx}-${amount}`,
               date: dateIso,
               createdAt: dateIso,
               type: isInc ? 'income' : 'expense',
               amount,
-              incomeSourceName: isInc ? (cat || 'Lương hàng tháng') : undefined,
+              incomeSourceName: isInc ? incSource.name : undefined,
+              incomeSourceId: isInc ? incSource.id : undefined,
               categoryName: !isInc ? (cat || 'Chi phí khác') : undefined,
-              category: cat,
+              category: isInc ? incSource.name : cat,
               walletName: wallet || 'Tài khoản Ngân hàng (Chính)',
               walletId: resolveWalletId(wallet),
-              note,
+              note: isInc && incSource.name === 'Không xác định' && cat !== 'Không xác định' ? (note ? `${note} (${cat})` : cat) : note,
               source: 'GoogleSheet',
               sheetTab: tab
             });
