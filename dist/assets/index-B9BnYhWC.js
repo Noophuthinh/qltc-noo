@@ -426,27 +426,33 @@ Error generating stack: `+r.message+`
   }
 }
 
-// Hàm phục hồi nhanh tiêu đề & dữ liệu chuẩn tab Tháng 10
+// 👉 HÀM TỰ ĐỘNG PHỤC HỒI LẠI TOÀN BỘ TIÊU ĐỀ & VỊ TRÍ GIAO DỊCH
 function fixThang10Sheet() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = getSheetCaseInsensitive(ss, 'tháng 10');
+  if (!ss) {
+    try {
+      ss = SpreadsheetApp.openById('16fJEGPnYfesl472G9QP9G0spdguhXf9cUyIr8AP8F2E');
+    } catch (e) {}
+  }
+  if (!ss) return;
+  var sheet = getSheetCaseInsensitive(ss, 'Tháng 10') || getSheetCaseInsensitive(ss, 'tháng 10') || ss.getSheets()[0];
   if (!sheet) return;
 
-  // 1. Xóa các ô bị ghi đè sai ở dòng 2 và dòng 3 (Cột H đến N)
+  // 1. Xóa các ô bị ghi đè sai ở dòng 2 và dòng 3
   sheet.getRange("H2:N3").clearContent();
 
   // 2. Khôi phục Tiêu đề bảng ở dòng 4 (Cột H)
   sheet.getRange("H4").setValue("📋 NHẬT KÝ GIAO DỊCH THU CHI CHI TIẾT");
 
-  // 3. Khôi phục Tiêu đề các cột ở dòng 5 (Cột H đến N)
+  // 3. Khôi phục Tiêu đề các cột màu xanh ở dòng 5 (Cột H đến N)
   sheet.getRange(5, 8, 1, 7).setValues([[
     "Ngày", "Phân loại", "Khoản mục / Danh mục", "Số tiền", "Ví thanh toán", "Ghi chú", "Trạng thái"
   ]]);
 
-  // 4. Xóa vùng dữ liệu cũ từ dòng 6 đến 100 ở cột H đến N
+  // 4. Xóa vùng dữ liệu cũ từ dòng 6 đến 100
   sheet.getRange(6, 8, 95, 7).clearContent();
 
-  // 5. Ghi lại 5 giao dịch chuẩn từ dòng 6 trở đi
+  // 5. Đặt lại 5 giao dịch chuẩn từ dòng 6 đến dòng 10
   var txs = [
     ["01/10/2026", "Thu nhập", "Lương hàng tháng", 18000000, "Tài khoản Ngân hàng (Chính)", "Nhận lương tháng 10", "Đã thanh toán"],
     ["01/10/2026", "Chi tiêu", "Đi lại & Xăng xe", 280000, "Tài khoản Ngân hàng (Chính)", "Vé bus tháng 10", "Đã thanh toán"],
