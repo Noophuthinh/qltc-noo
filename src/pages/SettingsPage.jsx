@@ -111,14 +111,14 @@ export default function SettingsPage({
           sheet.getRange("B1").setValue("QUẢN LÝ THU CHI THÁNG " + monthNum + "/" + yearNum + " Báo cáo dòng tiền cá nhân & Kiểm soát ngân sách");
         } catch (err) {}
         
-        // Xóa các dòng giao dịch cũ từ dòng 5 trở đi ở cột H đến N
+        // Xóa các dòng giao dịch cũ từ dòng 6 trở đi ở cột H đến N
         var lastRow = sheet.getLastRow();
-        if (lastRow >= 5) {
-          sheet.getRange(5, 8, Math.max(lastRow - 4, 1), 7).clearContent();
+        if (lastRow >= 6) {
+          sheet.getRange(6, 8, Math.max(lastRow - 5, 1), 7).clearContent();
         }
-        // Đặt lại số thực chi (Cột D5:D10) về 0
+        // Đặt lại số thực chi (Cột D6:D11) về 0
         try {
-          sheet.getRange("D5:D10").setValue(0);
+          sheet.getRange("D6:D11").setValue(0);
         } catch (err) {}
       } else {
         sheet = ss.insertSheet(sheetName);
@@ -126,11 +126,11 @@ export default function SettingsPage({
       }
     }
     
-    // Kiểm tra cấu trúc template: Cột H (cột 8) từ dòng 1 đến 5 có dữ liệu
+    // Kiểm tra cấu trúc template: Cột H (cột 8) có Nhật ký giao dịch
     var isTemplate = false;
     try {
-      var checkVal = String(sheet.getRange("H4").getValue() + " " + sheet.getRange("I4").getValue() + " " + sheet.getRange("H5").getValue()).toLowerCase();
-      if (checkVal.indexOf('thời gian') >= 0 || checkVal.indexOf('phân loại') >= 0 || checkVal.indexOf('ngày') >= 0 || sheet.getMaxColumns() >= 8) {
+      var checkVal = String(sheet.getRange("H4").getValue() + " " + sheet.getRange("I5").getValue() + " " + sheet.getRange("H5").getValue()).toLowerCase();
+      if (checkVal.indexOf('thời gian') >= 0 || checkVal.indexOf('phân loại') >= 0 || checkVal.indexOf('ngày') >= 0 || checkVal.indexOf('nhật ký') >= 0 || sheet.getMaxColumns() >= 8) {
         isTemplate = true;
       }
     } catch (err) {
@@ -139,15 +139,15 @@ export default function SettingsPage({
     
     if (data.action === 'append' && Array.isArray(data.row)) {
       if (isTemplate) {
-        // Tìm dòng trống đầu tiên ở cột H (bắt đầu kiểm tra từ dòng 5)
-        var nextRow = 5;
-        var hValues = sheet.getRange("H5:H200").getValues();
+        // Tìm dòng trống đầu tiên ở cột H (BẮT ĐẦU TỪ DÒNG 6 TRỞ ĐI ĐỂ BẢO VỆ TIÊU ĐỀ DÒNG 4 & 5)
+        var nextRow = 6;
+        var hValues = sheet.getRange("H6:H200").getValues();
         for (var i = 0; i < hValues.length; i++) {
           if (hValues[i][0] !== "" && hValues[i][0] !== null && hValues[i][0] !== undefined) {
-            nextRow = 5 + i + 1;
+            nextRow = 6 + i + 1;
           }
         }
-        // Ghi vào Cột H (cột số 8) đến Cột N (cột số 14)
+        // Ghi chính xác vào Cột H (cột 8: Ngày) đến Cột N (cột 14: Trạng thái)
         sheet.getRange(nextRow, 8, 1, data.row.length).setValues([data.row]);
       } else {
         if (sheet.getLastRow() === 0) {
@@ -162,11 +162,11 @@ export default function SettingsPage({
     if (data.action === 'syncAll' && Array.isArray(data.rows)) {
       if (isTemplate) {
         var lastRow = sheet.getLastRow();
-        if (lastRow >= 5) {
-          sheet.getRange(5, 8, Math.max(lastRow - 4, 1), 7).clearContent();
+        if (lastRow >= 6) {
+          sheet.getRange(6, 8, Math.max(lastRow - 5, 1), 7).clearContent();
         }
         if (data.rows.length > 0) {
-          sheet.getRange(5, 8, data.rows.length, data.rows[0].length).setValues(data.rows);
+          sheet.getRange(6, 8, data.rows.length, data.rows[0].length).setValues(data.rows);
         }
       } else {
         sheet.clearContents();
@@ -183,6 +183,37 @@ export default function SettingsPage({
     return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: err.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+// Hàm phục hồi nhanh tiêu đề & dữ liệu chuẩn tab Tháng 10
+function fixThang10Sheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = getSheetCaseInsensitive(ss, 'tháng 10');
+  if (!sheet) return;
+
+  // 1. Xóa các ô bị ghi đè sai ở dòng 2 và dòng 3 (Cột H đến N)
+  sheet.getRange("H2:N3").clearContent();
+
+  // 2. Khôi phục Tiêu đề bảng ở dòng 4 (Cột H)
+  sheet.getRange("H4").setValue("📋 NHẬT KÝ GIAO DỊCH THU CHI CHI TIẾT");
+
+  // 3. Khôi phục Tiêu đề các cột ở dòng 5 (Cột H đến N)
+  sheet.getRange(5, 8, 1, 7).setValues([[
+    "Ngày", "Phân loại", "Khoản mục / Danh mục", "Số tiền", "Ví thanh toán", "Ghi chú", "Trạng thái"
+  ]]);
+
+  // 4. Xóa vùng dữ liệu cũ từ dòng 6 đến 100 ở cột H đến N
+  sheet.getRange(6, 8, 95, 7).clearContent();
+
+  // 5. Ghi lại 5 giao dịch chuẩn từ dòng 6 trở đi
+  var txs = [
+    ["01/10/2026", "Thu nhập", "Lương hàng tháng", 18000000, "Tài khoản Ngân hàng (Chính)", "Nhận lương tháng 10", "Đã thanh toán"],
+    ["01/10/2026", "Chi tiêu", "Đi lại & Xăng xe", 280000, "Tài khoản Ngân hàng (Chính)", "Vé bus tháng 10", "Đã thanh toán"],
+    ["01/10/2026", "Chi tiêu", "Đi lại & Xăng xe", 90000, "Tài khoản Ngân hàng (Chính)", "Đổ xăng xe máy", "Đã thanh toán"],
+    ["03/10/2026", "Thu nhập", "Tiền đút lót", 500000, "Tiền mặt", "PB", "Đã thanh toán"],
+    ["03/10/2026", "Thu nhập", "Đầu tư THS", 10411000, "Tài khoản Ngân hàng (Chính)", "Chi trả cổ phần tháng 9", "Đã thanh toán"]
+  ];
+  sheet.getRange(6, 8, txs.length, 7).setValues(txs);
 }
 
 function getSheetCaseInsensitive(ss, name) {
