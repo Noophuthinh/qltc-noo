@@ -97,7 +97,7 @@ export default function SettingsPage({
     // Tìm sheet theo tên (không phân biệt hoa thường)
     var sheet = getSheetCaseInsensitive(ss, sheetName);
     
-    // Nếu chưa có tab tháng này (ví dụ sang tháng sau 'tháng 11'), tự động nhân bản từ template tháng trước
+    // Nếu chưa có tab tháng này (ví dụ sang tháng sau 'tháng 11'), tự động nhân bản từ template tháng 10
     if (!sheet) {
       var templateSheet = getSheetCaseInsensitive(ss, 'tháng 10') || ss.getSheets()[0];
       if (templateSheet) {
@@ -126,23 +126,28 @@ export default function SettingsPage({
       }
     }
     
+    // Kiểm tra cấu trúc template: Cột H (cột 8) từ dòng 1 đến 5 có dữ liệu
+    var isTemplate = false;
+    try {
+      var checkVal = String(sheet.getRange("H4").getValue() + " " + sheet.getRange("I4").getValue() + " " + sheet.getRange("H5").getValue()).toLowerCase();
+      if (checkVal.indexOf('thời gian') >= 0 || checkVal.indexOf('phân loại') >= 0 || checkVal.indexOf('ngày') >= 0 || sheet.getMaxColumns() >= 8) {
+        isTemplate = true;
+      }
+    } catch (err) {
+      isTemplate = false;
+    }
+    
     if (data.action === 'append' && Array.isArray(data.row)) {
-      var isTemplate = false;
-      try {
-        var h4Val = String(sheet.getRange("H4").getValue() || '').toLowerCase();
-        if (h4Val.indexOf('thời gian') >= 0 || h4Val.indexOf('ngày') >= 0 || sheet.getRange("I4").getValue()) {
-          isTemplate = true;
-        }
-      } catch (err) {}
-      
       if (isTemplate) {
+        // Tìm dòng trống đầu tiên ở cột H (bắt đầu kiểm tra từ dòng 5)
         var nextRow = 5;
-        var hColValues = sheet.getRange("H5:H200").getValues();
-        for (var i = 0; i < hColValues.length; i++) {
-          if (hColValues[i][0] !== "" && hColValues[i][0] !== null) {
+        var hValues = sheet.getRange("H5:H200").getValues();
+        for (var i = 0; i < hValues.length; i++) {
+          if (hValues[i][0] !== "" && hValues[i][0] !== null && hValues[i][0] !== undefined) {
             nextRow = 5 + i + 1;
           }
         }
+        // Ghi vào Cột H (cột số 8) đến Cột N (cột số 14)
         sheet.getRange(nextRow, 8, 1, data.row.length).setValues([data.row]);
       } else {
         if (sheet.getLastRow() === 0) {
@@ -150,19 +155,11 @@ export default function SettingsPage({
         }
         sheet.appendRow(data.row);
       }
-      return ContentService.createTextOutput(JSON.stringify({ status: 'success', sheet: sheetName }))
+      return ContentService.createTextOutput(JSON.stringify({ status: 'success', sheet: sheetName, row: nextRow }))
         .setMimeType(ContentService.MimeType.JSON);
     }
     
     if (data.action === 'syncAll' && Array.isArray(data.rows)) {
-      var isTemplate = false;
-      try {
-        var h4Val = String(sheet.getRange("H4").getValue() || '').toLowerCase();
-        if (h4Val.indexOf('thời gian') >= 0 || sheet.getRange("I4").getValue()) {
-          isTemplate = true;
-        }
-      } catch (err) {}
-      
       if (isTemplate) {
         var lastRow = sheet.getLastRow();
         if (lastRow >= 5) {
