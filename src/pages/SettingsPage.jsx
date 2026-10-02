@@ -90,25 +90,93 @@ export default function SettingsPage({
   const handleCopyAppsScriptCode = () => {
     const code = `function doPost(e) {
   try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
     var data = JSON.parse(e.postData.contents);
+    var sheetName = data.sheetName || 'tháng 10';
     
-    if (data.action === 'syncAll' && Array.isArray(data.rows)) {
-      sheet.clearContents();
-      sheet.appendRow(['Thời gian', 'Phân loại', 'Khoản mục / Nguồn', 'Số tiền (VNĐ)', 'Ví thanh toán', 'Ghi chú']);
-      data.rows.forEach(function(r) {
-        sheet.appendRow(r);
-      });
-      return ContentService.createTextOutput(JSON.stringify({ status: 'success', count: data.rows.length }))
-        .setMimeType(ContentService.MimeType.JSON);
+    // Tìm sheet theo tên (không phân biệt hoa thường)
+    var sheet = getSheetCaseInsensitive(ss, sheetName);
+    
+    // Nếu chưa có tab tháng này (ví dụ sang tháng sau 'tháng 11'), tự động nhân bản từ template tháng trước
+    if (!sheet) {
+      var templateSheet = getSheetCaseInsensitive(ss, 'tháng 10') || ss.getSheets()[0];
+      if (templateSheet) {
+        sheet = templateSheet.copyTo(ss);
+        sheet.setName(sheetName);
+        
+        // Cập nhật tiêu đề tháng mới
+        var monthNum = data.month || 11;
+        var yearNum = data.year || 2026;
+        try {
+          sheet.getRange("B1").setValue("QUẢN LÝ THU CHI THÁNG " + monthNum + "/" + yearNum + " Báo cáo dòng tiền cá nhân & Kiểm soát ngân sách");
+        } catch (err) {}
+        
+        // Xóa các dòng giao dịch cũ từ dòng 5 trở đi ở cột H đến N
+        var lastRow = sheet.getLastRow();
+        if (lastRow >= 5) {
+          sheet.getRange(5, 8, Math.max(lastRow - 4, 1), 7).clearContent();
+        }
+        // Đặt lại số thực chi (Cột D5:D10) về 0
+        try {
+          sheet.getRange("D5:D10").setValue(0);
+        } catch (err) {}
+      } else {
+        sheet = ss.insertSheet(sheetName);
+        sheet.appendRow(['Thời gian', 'Phân loại', 'Khoản mục / Nguồn', 'Số tiền (VNĐ)', 'Ví thanh toán', 'Ghi chú', 'Trạng thái']);
+      }
     }
     
     if (data.action === 'append' && Array.isArray(data.row)) {
-      if (sheet.getLastRow() === 0) {
-        sheet.appendRow(['Thời gian', 'Phân loại', 'Khoản mục / Nguồn', 'Số tiền (VNĐ)', 'Ví thanh toán', 'Ghi chú']);
+      var isTemplate = false;
+      try {
+        var h4Val = String(sheet.getRange("H4").getValue() || '').toLowerCase();
+        if (h4Val.indexOf('thời gian') >= 0 || h4Val.indexOf('ngày') >= 0 || sheet.getRange("I4").getValue()) {
+          isTemplate = true;
+        }
+      } catch (err) {}
+      
+      if (isTemplate) {
+        var nextRow = 5;
+        var hColValues = sheet.getRange("H5:H200").getValues();
+        for (var i = 0; i < hColValues.length; i++) {
+          if (hColValues[i][0] !== "" && hColValues[i][0] !== null) {
+            nextRow = 5 + i + 1;
+          }
+        }
+        sheet.getRange(nextRow, 8, 1, data.row.length).setValues([data.row]);
+      } else {
+        if (sheet.getLastRow() === 0) {
+          sheet.appendRow(['Thời gian', 'Phân loại', 'Khoản mục / Nguồn', 'Số tiền (VNĐ)', 'Ví thanh toán', 'Ghi chú', 'Trạng thái']);
+        }
+        sheet.appendRow(data.row);
       }
-      sheet.appendRow(data.row);
-      return ContentService.createTextOutput(JSON.stringify({ status: 'success' }))
+      return ContentService.createTextOutput(JSON.stringify({ status: 'success', sheet: sheetName }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    if (data.action === 'syncAll' && Array.isArray(data.rows)) {
+      var isTemplate = false;
+      try {
+        var h4Val = String(sheet.getRange("H4").getValue() || '').toLowerCase();
+        if (h4Val.indexOf('thời gian') >= 0 || sheet.getRange("I4").getValue()) {
+          isTemplate = true;
+        }
+      } catch (err) {}
+      
+      if (isTemplate) {
+        var lastRow = sheet.getLastRow();
+        if (lastRow >= 5) {
+          sheet.getRange(5, 8, Math.max(lastRow - 4, 1), 7).clearContent();
+        }
+        if (data.rows.length > 0) {
+          sheet.getRange(5, 8, data.rows.length, data.rows[0].length).setValues(data.rows);
+        }
+      } else {
+        sheet.clearContents();
+        sheet.appendRow(['Thời gian', 'Phân loại', 'Khoản mục / Nguồn', 'Số tiền (VNĐ)', 'Ví thanh toán', 'Ghi chú', 'Trạng thái']);
+        data.rows.forEach(function(r) { sheet.appendRow(r); });
+      }
+      return ContentService.createTextOutput(JSON.stringify({ status: 'success', count: data.rows.length, sheet: sheetName }))
         .setMimeType(ContentService.MimeType.JSON);
     }
 
@@ -120,10 +188,22 @@ export default function SettingsPage({
   }
 }
 
+function getSheetCaseInsensitive(ss, name) {
+  var sheets = ss.getSheets();
+  var target = (name || '').toLowerCase().trim();
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].getName().toLowerCase().trim() === target) {
+      return sheets[i];
+    }
+  }
+  return null;
+}
+
 function doGet(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var rows = sheet.getDataRange().getValues();
-  return ContentService.createTextOutput(JSON.stringify({ status: 'success', data: rows }))
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  var sheetNames = sheets.map(function(s) { return s.getName(); });
+  return ContentService.createTextOutput(JSON.stringify({ status: 'success', sheets: sheetNames }))
     .setMimeType(ContentService.MimeType.JSON);
 }`;
     navigator.clipboard.writeText(code).then(() => {

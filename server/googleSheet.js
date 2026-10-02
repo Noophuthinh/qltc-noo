@@ -1,10 +1,17 @@
 const SHEET_ID = process.env.GOOGLE_SHEET_ID || '16fJEGPnYfesl472G9QP9G0spdguhXf9cUyIr8AP8F2E';
 const DEFAULT_WEBHOOK_URL = process.env.GOOGLE_SHEET_WEBHOOK || 'https://script.google.com/macros/s/AKfycbx_DejBzN1Buv-DNbCIgwAvWruRUqbewIUFjMYFMg3Muk0TH2W97rz0mh-UOVlw0qH2/exec';
 
+function parseAmount(val) {
+  if (typeof val === 'number') return val;
+  if (!val) return 0;
+  const clean = String(val).replace(/[^\d.-]/g, '');
+  return parseFloat(clean) || 0;
+}
+
 function parseVNOrGSheetDate(cell) {
   if (!cell) return new Date().toISOString();
   
-  // 1. Ưu tiên chuỗi hiển thị format dd/MM/yyyy từ cell.f hoặc cell.v
+  // 1. Chuỗi hiển thị format dd/MM/yyyy từ cell.f hoặc cell.v
   const str = String(cell.f || cell.v || '').trim();
   const dmyMatch = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
   if (dmyMatch) {
@@ -18,86 +25,150 @@ function parseVNOrGSheetDate(cell) {
   const val = String(cell.v || '');
   if (val.startsWith('Date(')) {
     const parts = val.replace('Date(', '').replace(')', '').split(',').map(Number);
-    // Trong Google GViz Date(yyyy, mm, dd), mm là 0-indexed
     return new Date(Date.UTC(parts[0], parts[1], parts[2] || 1, parts[3] || 12, parts[4] || 0)).toISOString();
   }
 
-  // 3. Fallback ISO
+  // 3. Chuỗi yyyy-mm-dd
+  const ymdMatch = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+  if (ymdMatch) {
+    return new Date(Date.UTC(parseInt(ymdMatch[1],10), parseInt(ymdMatch[2],10)-1, parseInt(ymdMatch[3],10), 12, 0, 0)).toISOString();
+  }
+
+  // 4. Fallback ISO
   const d = new Date(val);
   if (!isNaN(d.getTime())) return d.toISOString();
 
   return new Date().toISOString();
 }
 
+async function fetchTabTable(tabName) {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tabName)}`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+    if (!res.ok) return null;
+    const text = await res.text();
+    const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+    if (!jsonStr) return null;
+    const parsed = JSON.parse(jsonStr);
+    return parsed.table || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function resolveWalletId(walletName) {
+  const w = String(walletName || '').toLowerCase();
+  if (w.includes('mặt') || w.includes('cash')) return 'wal-2';
+  if (w.includes('momo') || w.includes('zalo') || w.includes('điện tử')) return 'wal-3';
+  if (w.includes('đầu tư') || w.includes('ths') || w.includes('thành 7') || w.includes('cổ phần')) return 'wal-4';
+  return 'wal-1'; // Mặc định Ngân hàng
+}
+
+// Đọc toàn bộ giao dịch từ các tab theo tháng và tab chung
 async function fetchGoogleSheetTransactions() {
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
-    const res = await fetch(url);
-    if (!res.ok) {
-      console.warn('Không thể tải Google Sheet:', res.statusText);
-      return [];
-    }
+    const monthCandidateTabs = [
+      'tháng 10', 'Tháng 10',
+      'tháng 11', 'Tháng 11',
+      'tháng 12', 'Tháng 12',
+      'tháng 1', 'Tháng 1',
+      'tháng 2', 'Tháng 2',
+      'tháng 3', 'Tháng 3',
+      'tháng 4', 'Tháng 4',
+      'tháng 5', 'Tháng 5',
+      'tháng 6', 'Tháng 6',
+      'tháng 7', 'Tháng 7',
+      'tháng 8', 'Tháng 8',
+      'tháng 9', 'Tháng 9',
+      'Trang tính1', 'Sheet1'
+    ];
 
-    const text = await res.text();
-    // Google gviz returns /*O_o*/\ngoogle.visualization.Query.setResponse({...});
-    const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-    if (!jsonStr) return [];
+    const fetchedTabs = new Set();
+    const allTransactions = [];
 
-    const parsed = JSON.parse(jsonStr);
-    const table = parsed.table;
-    if (!table || !table.rows || table.rows.length === 0) {
-      return [];
-    }
+    for (const tab of monthCandidateTabs) {
+      const lower = tab.toLowerCase();
+      if (fetchedTabs.has(lower)) continue;
 
-    const cols = (table.cols || []).map(c => (c.label || '').trim().toLowerCase());
-    const transactions = [];
+      const table = await fetchTabTable(tab);
+      if (!table || !table.rows || table.rows.length === 0) continue;
 
-    table.rows.forEach((row, idx) => {
-      const cells = row.c || [];
-      const getVal = (colIndex) => {
-        if (!cells[colIndex]) return '';
-        return cells[colIndex].v !== null && cells[colIndex].v !== undefined ? cells[colIndex].v : '';
-      };
+      fetchedTabs.add(lower);
+      const rows = table.rows;
 
-      // Col 0: ID / Thời gian
-      // Col 1: Phân loại (Thu/Chi)
-      // Col 2: Khoản mục / Nguồn thu
-      // Col 3: Số tiền (VNĐ)
-      // Col 4: Ví
-      // Col 5: Ghi chú
-      const typeVal = String(getVal(1) || '').toLowerCase();
-      const nameVal = String(getVal(2) || 'Giao dịch');
-      const amountVal = Number(getVal(3) || 0);
-      const walletVal = String(getVal(4) || 'Tài khoản Ngân hàng (Chính)');
-      const noteVal = String(getVal(5) || '');
+      rows.forEach((r, idx) => {
+        const cells = r.c || [];
 
-      if (!amountVal || amountVal <= 0) return;
+        // Trường hợp 1: Template bố cục đẹp (Cột H/7: Ngày, I/8: Phân loại, J/9: Danh mục/Khoản mục, K/10: Số tiền, L/11: Ví, M/12: Ghi chú)
+        const dateCellTemplate = cells[7];
+        const typeCellTemplate = cells[8];
+        const typeStrTemplate = String(typeCellTemplate?.v || typeCellTemplate?.f || '').toLowerCase();
 
-      const isInc = typeVal.includes('thu') || typeVal.includes('income');
-      const isExp = typeVal.includes('chi') || typeVal.includes('expense');
-      const type = isInc ? 'income' : isExp ? 'expense' : 'income';
+        if (dateCellTemplate && (typeStrTemplate.includes('thu') || typeStrTemplate.includes('chi'))) {
+          const dateIso = parseVNOrGSheetDate(dateCellTemplate);
+          const amount = parseAmount(cells[10]?.v || cells[10]?.f);
+          const cat = String(cells[9]?.v || cells[9]?.f || '').trim();
+          const wallet = String(cells[11]?.v || cells[11]?.f || 'Tài khoản Ngân hàng (Chính)').trim();
+          const note = String(cells[12]?.v || cells[12]?.f || '').trim();
+          const isInc = typeStrTemplate.includes('thu');
 
-      const dateIso = parseVNOrGSheetDate(cells[0]);
+          if (amount > 0) {
+            allTransactions.push({
+              id: `tx-gsheet-${lower.replace(/\s+/g, '')}-${idx}-${amount}`,
+              date: dateIso,
+              createdAt: dateIso,
+              type: isInc ? 'income' : 'expense',
+              amount,
+              incomeSourceName: isInc ? (cat || 'Lương hàng tháng') : undefined,
+              categoryName: !isInc ? (cat || 'Chi phí khác') : undefined,
+              category: cat,
+              walletName: wallet || 'Tài khoản Ngân hàng (Chính)',
+              walletId: resolveWalletId(wallet),
+              note,
+              source: 'GoogleSheet',
+              sheetTab: tab
+            });
+            return;
+          }
+        }
 
-      transactions.push({
-        id: `tx-gsheet-${idx}-${amountVal}`,
-        date: dateIso,
-        createdAt: dateIso,
-        type,
-        amount: amountVal,
-        incomeSourceName: type === 'income' ? nameVal : undefined,
-        categoryName: type === 'expense' ? nameVal : undefined,
-        category: nameVal,
-        walletName: walletVal,
-        walletId: 'wal-1',
-        note: noteVal,
-        source: 'GoogleSheet'
+        // Trường hợp 2: Bố cục đơn giản chuẩn (Cột A/0: Ngày, B/1: Phân loại, C/2: Khoản mục, D/3: Số tiền, E/4: Ví, F/5: Ghi chú)
+        const dateCellStd = cells[0];
+        const typeCellStd = cells[1];
+        const typeStrStd = String(typeCellStd?.v || typeCellStd?.f || '').toLowerCase();
+
+        if (dateCellStd && (typeStrStd.includes('thu') || typeStrStd.includes('chi') || typeStrStd.includes('income') || typeStrStd.includes('expense'))) {
+          const dateIso = parseVNOrGSheetDate(dateCellStd);
+          const amount = parseAmount(cells[3]?.v || cells[3]?.f);
+          const cat = String(cells[2]?.v || cells[2]?.f || '').trim();
+          const wallet = String(cells[4]?.v || cells[4]?.f || 'Tài khoản Ngân hàng (Chính)').trim();
+          const note = String(cells[5]?.v || cells[5]?.f || '').trim();
+          const isInc = typeStrStd.includes('thu') || typeStrStd.includes('income');
+
+          if (amount > 0) {
+            allTransactions.push({
+              id: `tx-gsheet-std-${lower.replace(/\s+/g, '')}-${idx}-${amount}`,
+              date: dateIso,
+              createdAt: dateIso,
+              type: isInc ? 'income' : 'expense',
+              amount,
+              incomeSourceName: isInc ? (cat || 'Lương hàng tháng') : undefined,
+              categoryName: !isInc ? (cat || 'Chi phí khác') : undefined,
+              category: cat,
+              walletName: wallet || 'Tài khoản Ngân hàng (Chính)',
+              walletId: resolveWalletId(wallet),
+              note,
+              source: 'GoogleSheet',
+              sheetTab: tab
+            });
+          }
+        }
       });
-    });
+    }
 
-    return transactions;
+    return allTransactions;
   } catch (err) {
-    console.error('Lỗi khi parse Google Sheet:', err);
+    console.error('Lỗi khi tải Google Sheet theo tháng:', err);
     return [];
   }
 }
@@ -123,52 +194,95 @@ function formatTxRow(t) {
   const amountStr = Number(t.amount || 0);
   const walletStr = t.walletName || 'Tài khoản Ngân hàng (Chính)';
   const noteStr = t.note || '';
-  return [dateStr, typeStr, catStr, amountStr, walletStr, noteStr];
+  const statusStr = 'Đã thanh toán';
+  return [dateStr, typeStr, catStr, amountStr, walletStr, noteStr, statusStr];
 }
 
 // Đẩy toàn bộ danh sách giao dịch lên Google Sheet qua Apps Script Webhook
 async function pushAllToGoogleSheet(transactions = [], webhookUrl) {
   const targetUrl = webhookUrl || DEFAULT_WEBHOOK_URL;
   if (!targetUrl) throw new Error('Chưa cấu hình Google Apps Script Webhook URL');
-  const rows = transactions.map(formatTxRow);
   
-  const res = await fetch(targetUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      action: 'syncAll',
-      rows
-    }),
-    redirect: 'follow',
-    signal: AbortSignal.timeout(8000)
+  // Nhóm transactions theo tháng
+  const groupedByMonth = {};
+  transactions.forEach(t => {
+    const d = new Date(t.date || t.createdAt);
+    const m = !isNaN(d.getTime()) ? (d.getMonth() + 1) : (new Date().getMonth() + 1);
+    const y = !isNaN(d.getTime()) ? d.getFullYear() : new Date().getFullYear();
+    const tabName = `tháng ${m}`;
+    if (!groupedByMonth[tabName]) groupedByMonth[tabName] = { month: m, year: y, rows: [] };
+    groupedByMonth[tabName].rows.push(formatTxRow(t));
   });
 
-  if (!res.ok) {
-    throw new Error(`Google Apps Script phản hồi lỗi HTTP ${res.status}`);
+  const tabKeys = Object.keys(groupedByMonth);
+  if (tabKeys.length === 0) {
+    // Trống
+    const currentM = new Date().getMonth() + 1;
+    const currentY = new Date().getFullYear();
+    const res = await fetch(targetUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'syncAll',
+        sheetName: `tháng ${currentM}`,
+        month: currentM,
+        year: currentY,
+        rows: []
+      }),
+      redirect: 'follow',
+      signal: AbortSignal.timeout(10000)
+    });
+    return await res.json();
   }
 
-  const data = await res.json();
-  return data;
+  let lastResult = null;
+  for (const tabName of tabKeys) {
+    const group = groupedByMonth[tabName];
+    const res = await fetch(targetUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'syncAll',
+        sheetName: tabName,
+        month: group.month,
+        year: group.year,
+        rows: group.rows
+      }),
+      redirect: 'follow',
+      signal: AbortSignal.timeout(10000)
+    });
+    lastResult = await res.json();
+  }
+
+  return lastResult;
 }
 
-// Thêm 1 giao dịch mới trực tiếp vào Google Sheet qua Webhook
+// Thêm 1 giao dịch mới trực tiếp vào Google Sheet qua Webhook theo đúng tab tháng
 async function appendTransactionToGoogleSheet(tx, webhookUrl) {
   const targetUrl = webhookUrl || DEFAULT_WEBHOOK_URL;
   if (!targetUrl) return;
   try {
+    const d = new Date(tx.date || tx.createdAt);
+    const m = !isNaN(d.getTime()) ? (d.getMonth() + 1) : (new Date().getMonth() + 1);
+    const y = !isNaN(d.getTime()) ? d.getFullYear() : new Date().getFullYear();
+    const tabName = `tháng ${m}`;
     const row = formatTxRow(tx);
+
     await fetch(targetUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         action: 'append',
+        sheetName: tabName,
+        month: m,
+        year: y,
         row
       }),
       redirect: 'follow',
       signal: AbortSignal.timeout(8000)
     });
   } catch (err) {
-    console.warn('Lỗi gửi Webhook Google Sheet:', err.message);
+    console.warn('Lỗi gửi Webhook Google Sheet theo tháng:', err.message);
   }
 }
 

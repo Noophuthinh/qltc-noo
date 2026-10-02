@@ -102,7 +102,7 @@
       "id": "wal-1",
       "name": "Tài khoản Ngân hàng (Chính)",
       "type": "bank",
-      "balance": 0,
+      "balance": 28041000,
       "icon": "Building2",
       "color": "#3b82f6"
     },
@@ -110,7 +110,7 @@
       "id": "wal-2",
       "name": "Ví Tiền mặt",
       "type": "cash",
-      "balance": 0,
+      "balance": 500000,
       "icon": "Wallet",
       "color": "#10b981"
     },
@@ -194,7 +194,78 @@
       "color": "#8b5cf6"
     }
   ],
-  "transactions": [],
+  "transactions": [
+    {
+      "id": "tx-gsheet-tháng10-7-500000",
+      "date": "2026-10-03T12:00:00.000Z",
+      "createdAt": "2026-10-03T12:00:00.000Z",
+      "type": "income",
+      "amount": 500000,
+      "incomeSourceName": "Tiền đút lót",
+      "category": "Tiền đút lót",
+      "walletName": "Tiền mặt",
+      "walletId": "wal-2",
+      "note": "PB",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "tx-gsheet-tháng10-8-10411000",
+      "date": "2026-10-03T12:00:00.000Z",
+      "createdAt": "2026-10-03T12:00:00.000Z",
+      "type": "income",
+      "amount": 10411000,
+      "incomeSourceName": "Đầu tư THS",
+      "category": "Đầu tư THS",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "Chi trả cổ phần tháng 9",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "tx-gsheet-tháng10-4-18000000",
+      "date": "2026-10-01T12:00:00.000Z",
+      "createdAt": "2026-10-01T12:00:00.000Z",
+      "type": "income",
+      "amount": 18000000,
+      "incomeSourceName": "Lương hàng tháng",
+      "category": "Lương hàng tháng",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "Nhận lương tháng 10",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "tx-gsheet-tháng10-5-280000",
+      "date": "2026-10-01T12:00:00.000Z",
+      "createdAt": "2026-10-01T12:00:00.000Z",
+      "type": "expense",
+      "amount": 280000,
+      "categoryName": "Đi lại & Xăng xe",
+      "category": "Đi lại & Xăng xe",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "Vé bus tháng 10",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "tx-gsheet-tháng10-6-90000",
+      "date": "2026-10-01T12:00:00.000Z",
+      "createdAt": "2026-10-01T12:00:00.000Z",
+      "type": "expense",
+      "amount": 90000,
+      "categoryName": "Đi lại & Xăng xe",
+      "category": "Đi lại & Xăng xe",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "Đổ xăng xe máy",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    }
+  ],
   "settings": {
     "currency": "VND",
     "currencySymbol": "₫",
