@@ -8,16 +8,40 @@ function parseAmount(val) {
   return parseFloat(clean) || 0;
 }
 
-function parseVNOrGSheetDate(cell) {
+function parseVNOrGSheetDate(cell, expectedMonth = 10, expectedYear = 2026) {
   if (!cell) return new Date().toISOString();
   
-  // 1. Chuỗi hiển thị format dd/MM/yyyy từ cell.f hoặc cell.v
+  // 1. Chuỗi hiển thị format dd/MM/yyyy hoặc MM/dd/yyyy
   const str = String(cell.f || cell.v || '').trim();
   const dmyMatch = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
   if (dmyMatch) {
-    const day = parseInt(dmyMatch[1], 10);
-    const month = parseInt(dmyMatch[2], 10) - 1;
+    const p1 = parseInt(dmyMatch[1], 10);
+    const p2 = parseInt(dmyMatch[2], 10);
     const year = parseInt(dmyMatch[3], 10);
+
+    let day = p1;
+    let month = p2 - 1; // 0-indexed
+
+    // Nếu đang trong tab Tháng M (ví dụ Tháng 10):
+    if (expectedMonth) {
+      if (p1 === expectedMonth && p2 !== expectedMonth && p2 <= 31) {
+        // Ví dụ: 10/02/2026 trong tab Tháng 10 -> Ngày 02, Tháng 10!
+        month = expectedMonth - 1;
+        day = p2;
+      } else if (p2 === expectedMonth && p1 !== expectedMonth && p1 <= 31) {
+        // Ví dụ: 02/10/2026 trong tab Tháng 10 -> Ngày 02, Tháng 10!
+        month = expectedMonth - 1;
+        day = p1;
+      }
+    } else {
+      if (p1 > 12) {
+        day = p1;
+        month = p2 - 1;
+      } else if (p2 > 12) {
+        day = p2;
+        month = p1 - 1;
+      }
+    }
     return new Date(Date.UTC(year, month, day, 12, 0, 0)).toISOString();
   }
 
@@ -25,7 +49,18 @@ function parseVNOrGSheetDate(cell) {
   const val = String(cell.v || '');
   if (val.startsWith('Date(')) {
     const parts = val.replace('Date(', '').replace(')', '').split(',').map(Number);
-    return new Date(Date.UTC(parts[0], parts[1], parts[2] || 1, parts[3] || 12, parts[4] || 0)).toISOString();
+    let y = parts[0];
+    let m = parts[1]; // 0-indexed trong GViz
+    let d = parts[2] || 1;
+
+    if (expectedMonth) {
+      // Nếu GViz bị hiểu nhầm đảo ngày và tháng khi nhập trên mobile
+      if (d === expectedMonth && (m + 1) !== expectedMonth) {
+        d = m + 1;
+        m = expectedMonth - 1;
+      }
+    }
+    return new Date(Date.UTC(y, m, d, 12, 0, 0)).toISOString();
   }
 
   // 3. Chuỗi yyyy-mm-dd
@@ -69,7 +104,7 @@ function resolveIncomeSource(name) {
   if (s.includes('lương') || s.includes('luong') || s.includes('cố định')) {
     return { name: 'Lương hàng tháng', id: 'inc-1' };
   }
-  if (s.includes('ths') || s.includes('chrono') || s.includes('cổ phần') || s.includes('quỹ đầu tư ths')) {
+  if (s.includes('ths') || s.includes('chrono') || s.includes('cổ phần') || s.includes('đầu tư ths') || s.includes('quỹ đầu tư ths')) {
     return { name: 'Quỹ Đầu tư THS', id: 'inc-2' };
   }
   if (s.includes('thành 7') || s.includes('thanh 7')) {
@@ -109,6 +144,8 @@ async function fetchGoogleSheetTransactions() {
 
       fetchedTabs.add(lower);
       const rows = table.rows;
+      const monthNumMatch = tab.match(/\d+/);
+      const expectedMonth = monthNumMatch ? parseInt(monthNumMatch[0], 10) : 10;
 
       rows.forEach((r, idx) => {
         const cells = r.c || [];
@@ -119,7 +156,7 @@ async function fetchGoogleSheetTransactions() {
         const typeStrTemplate = String(typeCellTemplate?.v || typeCellTemplate?.f || '').toLowerCase();
 
         if (dateCellTemplate && (typeStrTemplate.includes('thu') || typeStrTemplate.includes('chi'))) {
-          const dateIso = parseVNOrGSheetDate(dateCellTemplate);
+          const dateIso = parseVNOrGSheetDate(dateCellTemplate, expectedMonth);
           const amount = parseAmount(cells[10]?.v || cells[10]?.f);
           const cat = String(cells[9]?.v || cells[9]?.f || '').trim();
           const wallet = String(cells[11]?.v || cells[11]?.f || 'Tài khoản Ngân hàng (Chính)').trim();
@@ -154,7 +191,7 @@ async function fetchGoogleSheetTransactions() {
         const typeStrStd = String(typeCellStd?.v || typeCellStd?.f || '').toLowerCase();
 
         if (dateCellStd && (typeStrStd.includes('thu') || typeStrStd.includes('chi') || typeStrStd.includes('income') || typeStrStd.includes('expense'))) {
-          const dateIso = parseVNOrGSheetDate(dateCellStd);
+          const dateIso = parseVNOrGSheetDate(dateCellStd, expectedMonth);
           const amount = parseAmount(cells[3]?.v || cells[3]?.f);
           const cat = String(cells[2]?.v || cells[2]?.f || '').trim();
           const wallet = String(cells[4]?.v || cells[4]?.f || 'Tài khoản Ngân hàng (Chính)').trim();

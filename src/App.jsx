@@ -85,6 +85,13 @@ export default function App() {
 
   useEffect(() => {
     loadAll(selectedMonth, selectedYear);
+
+    // Tự động kiểm tra và đồng bộ lại khi người dùng quay lại tab trình duyệt
+    const handleWindowFocus = () => {
+      loadAll(selectedMonth, selectedYear);
+    };
+    window.addEventListener('focus', handleWindowFocus);
+    return () => window.removeEventListener('focus', handleWindowFocus);
   }, [selectedMonth, selectedYear]);
 
   const handleChangeMonth = (m, y) => {
@@ -215,6 +222,7 @@ export default function App() {
           onChangeMonth={handleChangeMonth}
           onOpenNewTx={() => setIsNewTxOpen(true)}
           onRefresh={() => loadAll(selectedMonth, selectedYear)}
+          onSyncGoogleSheet={handleSyncGoogleSheet}
           onOpenDrawer={() => setIsDrawerOpen(true)}
           isLoading={isLoading}
         />
@@ -232,8 +240,10 @@ export default function App() {
                 onOpenNewTx={() => setIsNewTxOpen(true)}
                 onNavigateTab={setCurrentTab}
                 onEditIncomeSource={(s) => setEditingSource(s)}
+                onSyncGoogleSheet={handleSyncGoogleSheet}
                 onSyncTHS={handleSyncTHS}
                 isSyncingTHS={isSyncingTHS}
+                isLoading={isLoading}
               />
             )}
 

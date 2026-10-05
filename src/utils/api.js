@@ -1,7 +1,7 @@
 const BASE_URL = '/api';
 
-export async function fetchAllData() {
-  const res = await fetch(`${BASE_URL}/data`);
+export async function fetchAllData(syncGSheet = true) {
+  const res = await fetch(`${BASE_URL}/data?syncGSheet=${syncGSheet}`);
   if (!res.ok) throw new Error('Không thể tải dữ liệu');
   return res.json();
 }

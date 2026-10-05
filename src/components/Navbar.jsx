@@ -2,17 +2,19 @@ import React from 'react';
 import { 
   Plus, 
   RefreshCw,
-  Menu
+  Menu,
+  FileSpreadsheet
 } from 'lucide-react';
 import MonthSelector from './MonthSelector';
 
 export default function Navbar({ 
   summary = {}, 
-  selectedMonth = 9, 
+  selectedMonth = 10, 
   selectedYear = 2026, 
   onChangeMonth, 
   onOpenNewTx, 
   onRefresh, 
+  onSyncGoogleSheet,
   onOpenDrawer,
   isLoading 
 }) {
@@ -43,23 +45,24 @@ export default function Navbar({
         
         <div className="hidden lg:flex items-center space-x-2 text-[11px] text-slate-400 pl-2">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Bắt đầu quản lý từ T9/2026</span>
+          <span>Bắt đầu quản lý từ T10/2026</span>
         </div>
       </div>
 
       {/* Right Stats & Actions */}
       <div className="flex items-center space-x-2 md:space-x-3">
-        {/* Refresh button */}
+        {/* Nút Đồng bộ Google Sheet trực tiếp (Nổi bật & Siêu nhanh) */}
         <button
-          onClick={onRefresh}
+          onClick={onSyncGoogleSheet || onRefresh}
           disabled={isLoading}
-          title="Làm mới dữ liệu"
-          className="p-1.5 md:p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors border border-slate-700/50"
+          title="Đồng bộ trực tiếp tất cả giao dịch mới từ Google Sheet"
+          className="flex items-center space-x-1.5 px-3 py-1.5 md:py-2 rounded-xl bg-emerald-950/80 hover:bg-emerald-900/90 text-emerald-400 border border-emerald-500/40 text-xs font-bold transition-all active:scale-95 shadow-md shadow-emerald-950/30"
         >
-          <RefreshCw className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isLoading ? 'animate-spin text-emerald-400' : ''}`} />
+          <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-emerald-300' : 'text-emerald-400'}`} />
+          <span className="hidden sm:inline">Đồng bộ Sheet</span>
         </button>
 
-        {/* Quick Add Button (Desktop only, mobile has bottom bar button) */}
+        {/* Quick Add Button */}
         <button
           onClick={onOpenNewTx}
           className="hidden sm:flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md shadow-emerald-600/30 transition-all active:scale-95"

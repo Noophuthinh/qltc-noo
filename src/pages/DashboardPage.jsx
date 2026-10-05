@@ -50,14 +50,16 @@ ChartJS.register(
 export default function DashboardPage({
   analytics = {},
   data = {},
-  selectedMonth = 9,
+  selectedMonth = 10,
   selectedYear = 2026,
   onChangeMonth,
   onOpenNewTx,
   onNavigateTab,
   onEditIncomeSource,
+  onSyncGoogleSheet,
   onSyncTHS,
-  isSyncingTHS
+  isSyncingTHS,
+  isLoading
 }) {
   const summary = analytics.summary || {};
   const incomeBySource = analytics.incomeBySource || [];
@@ -200,7 +202,17 @@ export default function DashboardPage({
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <button
+            onClick={onSyncGoogleSheet}
+            disabled={isLoading}
+            className="px-3.5 py-2.5 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 text-emerald-400 border border-emerald-500/40 text-xs font-bold shadow-md shadow-emerald-950/30 transition-all active:scale-95 flex items-center space-x-1.5"
+            title="Đồng bộ ngay dữ liệu mới nhất từ Google Sheet"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-emerald-300' : ''}`} />
+            <span>Đồng bộ Sheet</span>
+          </button>
+
           <MonthSelector
             selectedMonth={selectedMonth}
             selectedYear={selectedYear}

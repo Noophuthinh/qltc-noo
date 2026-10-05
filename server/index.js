@@ -105,12 +105,29 @@ app.get('/api/analytics', (req, res) => {
     };
   });
 
+  // Hàm chuẩn hóa nguồn thu vào 4 nhóm chính
+  function getMatchedIncomeSourceName(rawName) {
+    const s = String(rawName || '').toLowerCase().trim();
+    if (s.includes('lương') || s.includes('luong') || s.includes('cố định')) {
+      return 'Lương hàng tháng';
+    }
+    if (s.includes('ths') || s.includes('chrono') || s.includes('cổ phần') || s.includes('đầu tư ths') || s.includes('quỹ đầu tư ths')) {
+      return 'Quỹ Đầu tư THS';
+    }
+    if (s.includes('thành 7') || s.includes('thanh 7')) {
+      return 'Quỹ Đầu tư Thành 7';
+    }
+    return 'Không xác định';
+  }
+
   // Tính tổng all time và tổng tháng này cho từng nguồn
   txs.filter(t => t.type === 'income').forEach(t => {
-    const srcName = t.incomeSourceName || 'Không xác định';
+    const rawName = t.incomeSourceName || t.category || 'Không xác định';
+    const srcName = getMatchedIncomeSourceName(rawName);
+
     if (!incomeBySource[srcName]) {
       incomeBySource[srcName] = { 
-        id: t.incomeSourceId, 
+        id: t.incomeSourceId || 'inc-4', 
         name: srcName, 
         color: '#94a3b8', 
         monthlyTarget: 0, 
