@@ -352,21 +352,25 @@ export default function DashboardPage({
 
         {/* 4 Cards Nguồn Thu Nhập với Process Bar & Trạng Thái Chi Tiết */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {(data.incomeSources || []).map((source) => {
+        {(data.incomeSources || []).map((source) => {
             const stats = incomeBySource.find(s => s.name === source.name) || {};
             const earnedThisMonth = stats.totalMonth || 0;
             const target = Number(source.monthlyTarget || 0);
             const rawPct = target > 0 ? (earnedThisMonth / target) * 100 : 0;
             const pct = Math.min(Math.round(rawPct), 100);
-            const isCompleted = target > 0 && earnedThisMonth >= target;
-            const isPartial = earnedThisMonth > 0 && !isCompleted;
+            const isExceeded = target > 0 && earnedThisMonth > target;
+            const isCompleted = target > 0 && earnedThisMonth >= target && !isExceeded;
+            const isPartial = earnedThisMonth > 0 && !isCompleted && !isExceeded;
             const diff = target - earnedThisMonth;
+            const exceededBy = earnedThisMonth - target;
 
             return (
               <div 
                 key={source.id}
                 className={`p-4 rounded-xl border transition-all flex flex-col justify-between ${
-                  isCompleted 
+                  isExceeded
+                    ? 'border-violet-500/60 bg-violet-950/25 shadow-lg shadow-violet-950/40 ring-1 ring-violet-500/40'
+                    : isCompleted 
                     ? 'border-emerald-500/50 bg-emerald-950/20 shadow-lg shadow-emerald-950/30 ring-1 ring-emerald-500/30' 
                     : isPartial 
                     ? 'border-amber-500/40 bg-amber-950/10' 
@@ -388,7 +392,12 @@ export default function DashboardPage({
 
                   {/* Status Pill Badge */}
                   <div className="mb-2">
-                    {isCompleted ? (
+                    {isExceeded ? (
+                      <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-md bg-violet-500/25 text-violet-300 text-[10px] font-extrabold border border-violet-500/50">
+                        <CheckCircle2 className="w-3 h-3 mr-0.5" />
+                        <span>🚀 VƯỢT MỤC TIÊU ({Math.round(rawPct)}%)</span>
+                      </span>
+                    ) : isCompleted ? (
                       <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-[10px] font-extrabold border border-emerald-500/40">
                         <CheckCircle2 className="w-3 h-3 mr-0.5" />
                         <span>ĐÃ ĐẠT MỤC TIÊU (100%)</span>
@@ -405,7 +414,7 @@ export default function DashboardPage({
                   </div>
 
                   {/* Amount Earned */}
-                  <div className="text-xl font-black text-emerald-400">
+                  <div className={`text-xl font-black ${isExceeded ? 'text-violet-300' : 'text-emerald-400'}`}>
                     {formatVND(earnedThisMonth)}
                   </div>
 
@@ -413,18 +422,22 @@ export default function DashboardPage({
                   <div className="mt-3 space-y-1">
                     <div className="flex justify-between text-[10px] text-slate-400">
                       <span>Tiến độ</span>
-                      <span className={`font-bold ${isCompleted ? 'text-emerald-400' : 'text-slate-300'}`}>{pct}%</span>
+                      <span className={`font-bold ${isExceeded ? 'text-violet-400' : isCompleted ? 'text-emerald-400' : 'text-slate-300'}`}>
+                        {isExceeded ? Math.round(rawPct) : pct}%
+                      </span>
                     </div>
                     <div className="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-800">
                       <div 
                         className={`h-full rounded-full transition-all duration-500 ${
-                          isCompleted
+                          isExceeded
+                            ? 'bg-gradient-to-r from-violet-500 to-fuchsia-400 shadow-sm shadow-violet-400'
+                            : isCompleted
                             ? 'bg-emerald-400 shadow-sm shadow-emerald-400'
                             : isPartial
                             ? 'bg-amber-400'
                             : 'bg-slate-700'
                         }`}
-                        style={{ width: `${pct}%` }}
+                        style={{ width: '100%' }}
                       ></div>
                     </div>
                   </div>
@@ -438,7 +451,9 @@ export default function DashboardPage({
                   </div>
                   <div className="flex items-center justify-between text-[10px]">
                     <span className="text-slate-500">Trạng thái:</span>
-                    {isCompleted ? (
+                    {isExceeded ? (
+                      <span className="text-violet-400 font-bold">Vượt +{formatVND(exceededBy)} 🚀</span>
+                    ) : isCompleted ? (
                       <span className="text-emerald-400 font-bold">Đã hoàn thành ✓</span>
                     ) : diff > 0 ? (
                       <span className="text-amber-400 font-medium">Còn thiếu {formatVND(diff)}</span>
