@@ -146,6 +146,7 @@ async function fetchGoogleSheetTransactions() {
       const rows = table.rows;
       const monthNumMatch = tab.match(/\d+/);
       const expectedMonth = monthNumMatch ? parseInt(monthNumMatch[0], 10) : 10;
+      let lastValidDate = new Date(Date.UTC(2026, expectedMonth - 1, 1, 12, 0, 0)).toISOString();
 
       rows.forEach((r, idx) => {
         const cells = r.c || [];
@@ -155,15 +156,23 @@ async function fetchGoogleSheetTransactions() {
         const typeCellTemplate = cells[8];
         const typeStrTemplate = String(typeCellTemplate?.v || typeCellTemplate?.f || '').toLowerCase();
 
-        if (dateCellTemplate && (typeStrTemplate.includes('thu') || typeStrTemplate.includes('chi'))) {
-          const dateIso = parseVNOrGSheetDate(dateCellTemplate, expectedMonth);
+        if (typeStrTemplate.includes('thu') || typeStrTemplate.includes('chi')) {
           const amount = parseAmount(cells[10]?.v || cells[10]?.f);
-          const cat = String(cells[9]?.v || cells[9]?.f || '').trim();
-          const wallet = String(cells[11]?.v || cells[11]?.f || 'Tài khoản Ngân hàng (Chính)').trim();
-          const note = String(cells[12]?.v || cells[12]?.f || '').trim();
-          const isInc = typeStrTemplate.includes('thu');
-
           if (amount > 0) {
+            let dateIso = lastValidDate;
+            if (dateCellTemplate && (dateCellTemplate.v || dateCellTemplate.f)) {
+              const parsed = parseVNOrGSheetDate(dateCellTemplate, expectedMonth);
+              if (parsed) {
+                dateIso = parsed;
+                lastValidDate = parsed;
+              }
+            }
+
+            const cat = String(cells[9]?.v || cells[9]?.f || '').trim();
+            const wallet = String(cells[11]?.v || cells[11]?.f || 'Tài khoản Ngân hàng (Chính)').trim();
+            const note = String(cells[12]?.v || cells[12]?.f || '').trim();
+            const isInc = typeStrTemplate.includes('thu');
+
             const incSource = isInc ? resolveIncomeSource(cat) : null;
             allTransactions.push({
               id: `tx-gsheet-${lower.replace(/\s+/g, '')}-${idx}-${amount}`,
@@ -190,15 +199,23 @@ async function fetchGoogleSheetTransactions() {
         const typeCellStd = cells[1];
         const typeStrStd = String(typeCellStd?.v || typeCellStd?.f || '').toLowerCase();
 
-        if (dateCellStd && (typeStrStd.includes('thu') || typeStrStd.includes('chi') || typeStrStd.includes('income') || typeStrStd.includes('expense'))) {
-          const dateIso = parseVNOrGSheetDate(dateCellStd, expectedMonth);
+        if (typeStrStd.includes('thu') || typeStrStd.includes('chi') || typeStrStd.includes('income') || typeStrStd.includes('expense')) {
           const amount = parseAmount(cells[3]?.v || cells[3]?.f);
-          const cat = String(cells[2]?.v || cells[2]?.f || '').trim();
-          const wallet = String(cells[4]?.v || cells[4]?.f || 'Tài khoản Ngân hàng (Chính)').trim();
-          const note = String(cells[5]?.v || cells[5]?.f || '').trim();
-          const isInc = typeStrStd.includes('thu') || typeStrStd.includes('income');
-
           if (amount > 0) {
+            let dateIso = lastValidDate;
+            if (dateCellStd && (dateCellStd.v || dateCellStd.f)) {
+              const parsed = parseVNOrGSheetDate(dateCellStd, expectedMonth);
+              if (parsed) {
+                dateIso = parsed;
+                lastValidDate = parsed;
+              }
+            }
+
+            const cat = String(cells[2]?.v || cells[2]?.f || '').trim();
+            const wallet = String(cells[4]?.v || cells[4]?.f || 'Tài khoản Ngân hàng (Chính)').trim();
+            const note = String(cells[5]?.v || cells[5]?.f || '').trim();
+            const isInc = typeStrStd.includes('thu') || typeStrStd.includes('income');
+
             const incSource = isInc ? resolveIncomeSource(cat) : null;
             allTransactions.push({
               id: `tx-gsheet-std-${lower.replace(/\s+/g, '')}-${idx}-${amount}`,

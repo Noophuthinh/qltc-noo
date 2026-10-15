@@ -651,37 +651,37 @@ class Database {
         return { success: true, count: 0, message: 'Google Sheet trống hoặc chưa có dữ liệu giao dịch' };
       }
 
-      const getTxKey = (t) => {
+      // Giữ lại các giao dịch được tạo thủ công từ web (không phải từ GoogleSheet)
+      const manualTxs = (this.data.transactions || []).filter(t => t.source !== 'GoogleSheet');
+
+      // Tạo map kiểm tra để tránh duplicate giữa giao dịch manual trên web và Google Sheet
+      const gsheetKeySet = new Set(gsheetTxs.map(t => {
         const d = new Date(t.date || t.createdAt);
         const dStr = !isNaN(d.getTime()) ? `${d.getUTCFullYear()}-${d.getUTCMonth()}-${d.getUTCDate()}` : 'nodate';
         return `${dStr}-${t.amount}-${t.type}-${(t.incomeSourceName || t.categoryName || t.category || '').trim().toLowerCase()}`;
-      };
+      }));
 
-      const serverTxs = this.data.transactions || [];
-      const existingMap = new Set(serverTxs.map(getTxKey));
-      let added = 0;
+      // Chỉ giữ lại những giao dịch manual chưa có trên Google Sheet
+      const preservedManualTxs = manualTxs.filter(mt => {
+        const d = new Date(mt.date || mt.createdAt);
+        const dStr = !isNaN(d.getTime()) ? `${d.getUTCFullYear()}-${d.getUTCMonth()}-${d.getUTCDate()}` : 'nodate';
+        const key = `${dStr}-${mt.amount}-${mt.type}-${(mt.incomeSourceName || mt.categoryName || mt.category || '').trim().toLowerCase()}`;
+        return !gsheetKeySet.has(key);
+      });
 
-      for (const gt of gsheetTxs) {
-        const key = getTxKey(gt);
-        if (!existingMap.has(key)) {
-          serverTxs.push(gt);
-          existingMap.add(key);
-          added++;
-        }
-      }
+      // Kết hợp toàn bộ giao dịch từ Google Sheet + các giao dịch thủ công
+      const allTxs = [...gsheetTxs, ...preservedManualTxs];
+      allTxs.sort((a, b) => new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt));
 
-      if (added > 0) {
-        serverTxs.sort((a, b) => new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt));
-        this.data.transactions = serverTxs;
-        this.recalculateBalances();
-        this.save();
-      }
+      this.data.transactions = allTxs;
+      this.recalculateBalances();
+      this.save();
 
       return {
         success: true,
         sheetTotal: gsheetTxs.length,
-        addedCount: added,
-        totalNow: serverTxs.length
+        addedCount: gsheetTxs.length,
+        totalNow: allTxs.length
       };
     } catch (e) {
       console.error('Lỗi khi đồng bộ Google Sheet:', e);
