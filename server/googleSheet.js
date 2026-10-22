@@ -174,8 +174,10 @@ async function fetchGoogleSheetTransactions() {
             const isInc = typeStrTemplate.includes('thu');
 
             const incSource = isInc ? resolveIncomeSource(cat) : null;
+            // ID ổn định theo vị trí dòng thực trong sheet để tránh conflict
+            const stableId = `gsheet-${lower.replace(/\s+/g, '')}-row${idx + 1}`;
             allTransactions.push({
-              id: `tx-gsheet-${lower.replace(/\s+/g, '')}-${idx}-${amount}`,
+              id: stableId,
               date: dateIso,
               createdAt: dateIso,
               type: isInc ? 'income' : 'expense',
@@ -217,8 +219,10 @@ async function fetchGoogleSheetTransactions() {
             const isInc = typeStrStd.includes('thu') || typeStrStd.includes('income');
 
             const incSource = isInc ? resolveIncomeSource(cat) : null;
+            // ID ổn định theo vị trí dòng thực trong sheet
+            const stableId2 = `gsheet-${lower.replace(/\s+/g, '')}-row${idx + 1}`;
             allTransactions.push({
-              id: `tx-gsheet-std-${lower.replace(/\s+/g, '')}-${idx}-${amount}`,
+              id: stableId2,
               date: dateIso,
               createdAt: dateIso,
               type: isInc ? 'income' : 'expense',

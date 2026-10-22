@@ -102,7 +102,7 @@
       "id": "wal-1",
       "name": "Tài khoản Ngân hàng (Chính)",
       "type": "bank",
-      "balance": 30858000,
+      "balance": 32348000,
       "icon": "Building2",
       "color": "#3b82f6"
     },
@@ -196,7 +196,7 @@
   ],
   "transactions": [
     {
-      "id": "tx-gsheet-tháng10-9-600000",
+      "id": "gsheet-tháng10-row10",
       "date": "2026-10-19T12:00:00.000Z",
       "createdAt": "2026-10-19T12:00:00.000Z",
       "type": "expense",
@@ -210,7 +210,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-27-200000",
+      "id": "gsheet-tháng10-row28",
       "date": "2026-10-12T12:00:00.000Z",
       "createdAt": "2026-10-12T12:00:00.000Z",
       "type": "expense",
@@ -224,7 +224,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-28-240000",
+      "id": "gsheet-tháng10-row29",
       "date": "2026-10-12T12:00:00.000Z",
       "createdAt": "2026-10-12T12:00:00.000Z",
       "type": "expense",
@@ -238,7 +238,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-29-170000",
+      "id": "gsheet-tháng10-row30",
       "date": "2026-10-12T12:00:00.000Z",
       "createdAt": "2026-10-12T12:00:00.000Z",
       "type": "expense",
@@ -252,7 +252,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-30-2000000",
+      "id": "gsheet-tháng10-row31",
       "date": "2026-10-12T12:00:00.000Z",
       "createdAt": "2026-10-12T12:00:00.000Z",
       "type": "income",
@@ -267,7 +267,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-31-105000",
+      "id": "gsheet-tháng10-row32",
       "date": "2026-10-12T12:00:00.000Z",
       "createdAt": "2026-10-12T12:00:00.000Z",
       "type": "expense",
@@ -281,7 +281,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-32-1500000",
+      "id": "gsheet-tháng10-row33",
       "date": "2026-10-12T12:00:00.000Z",
       "createdAt": "2026-10-12T12:00:00.000Z",
       "type": "income",
@@ -296,7 +296,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-33-1500000",
+      "id": "gsheet-tháng10-row34",
       "date": "2026-10-12T12:00:00.000Z",
       "createdAt": "2026-10-12T12:00:00.000Z",
       "type": "income",
@@ -311,7 +311,138 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-26-100000",
+      "id": "gsheet-tháng10-row35",
+      "date": "2026-10-12T12:00:00.000Z",
+      "createdAt": "2026-10-12T12:00:00.000Z",
+      "type": "expense",
+      "amount": 380000,
+      "categoryName": "Ăn uống & Cà phê",
+      "category": "Ăn uống & Cà phê",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "Ăn trưa cùng ban",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "gsheet-tháng10-row36",
+      "date": "2026-10-12T12:00:00.000Z",
+      "createdAt": "2026-10-12T12:00:00.000Z",
+      "type": "income",
+      "amount": 500000,
+      "incomeSourceName": "Không xác định",
+      "incomeSourceId": "inc-4",
+      "category": "Không xác định",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "gsheet-tháng10-row37",
+      "date": "2026-10-12T12:00:00.000Z",
+      "createdAt": "2026-10-12T12:00:00.000Z",
+      "type": "income",
+      "amount": 2000000,
+      "incomeSourceName": "Không xác định",
+      "incomeSourceId": "inc-4",
+      "category": "Không xác định",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "gsheet-tháng10-row38",
+      "date": "2026-10-12T12:00:00.000Z",
+      "createdAt": "2026-10-12T12:00:00.000Z",
+      "type": "income",
+      "amount": 2000000,
+      "incomeSourceName": "Không xác định",
+      "incomeSourceId": "inc-4",
+      "category": "Không xác định",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "gsheet-tháng10-row39",
+      "date": "2026-10-12T12:00:00.000Z",
+      "createdAt": "2026-10-12T12:00:00.000Z",
+      "type": "expense",
+      "amount": 270000,
+      "categoryName": "Đi lại & Xăng xe",
+      "category": "Đi lại & Xăng xe",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "gsheet-tháng10-row40",
+      "date": "2026-10-12T12:00:00.000Z",
+      "createdAt": "2026-10-12T12:00:00.000Z",
+      "type": "income",
+      "amount": 500000,
+      "incomeSourceName": "Không xác định",
+      "incomeSourceId": "inc-4",
+      "category": "Không xác định",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "gsheet-tháng10-row41",
+      "date": "2026-10-12T12:00:00.000Z",
+      "createdAt": "2026-10-12T12:00:00.000Z",
+      "type": "income",
+      "amount": 500000,
+      "incomeSourceName": "Không xác định",
+      "incomeSourceId": "inc-4",
+      "category": "Không xác định",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "gsheet-tháng10-row42",
+      "date": "2026-10-12T12:00:00.000Z",
+      "createdAt": "2026-10-12T12:00:00.000Z",
+      "type": "expense",
+      "amount": 860000,
+      "categoryName": "Ăn uống & Cà phê",
+      "category": "Ăn uống & Cà phê",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "Ăn mời BVAN",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "gsheet-tháng10-row43",
+      "date": "2026-10-12T12:00:00.000Z",
+      "createdAt": "2026-10-12T12:00:00.000Z",
+      "type": "expense",
+      "amount": 2500000,
+      "categoryName": "Học tập & Kỹ năng",
+      "category": "Học tập & Kỹ năng",
+      "walletName": "Tài khoản Ngân hàng (Chính)",
+      "walletId": "wal-1",
+      "note": "Tiền học đan của na",
+      "source": "GoogleSheet",
+      "sheetTab": "tháng 10"
+    },
+    {
+      "id": "gsheet-tháng10-row27",
       "date": "2026-10-11T12:00:00.000Z",
       "createdAt": "2026-10-11T12:00:00.000Z",
       "type": "expense",
@@ -325,7 +456,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-24-35000",
+      "id": "gsheet-tháng10-row25",
       "date": "2026-10-10T12:00:00.000Z",
       "createdAt": "2026-10-10T12:00:00.000Z",
       "type": "expense",
@@ -339,7 +470,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-25-780000",
+      "id": "gsheet-tháng10-row26",
       "date": "2026-10-10T12:00:00.000Z",
       "createdAt": "2026-10-10T12:00:00.000Z",
       "type": "expense",
@@ -353,7 +484,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-21-2000000",
+      "id": "gsheet-tháng10-row22",
       "date": "2026-10-09T12:00:00.000Z",
       "createdAt": "2026-10-09T12:00:00.000Z",
       "type": "income",
@@ -368,7 +499,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-22-90000",
+      "id": "gsheet-tháng10-row23",
       "date": "2026-10-09T12:00:00.000Z",
       "createdAt": "2026-10-09T12:00:00.000Z",
       "type": "expense",
@@ -382,7 +513,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-23-40000",
+      "id": "gsheet-tháng10-row24",
       "date": "2026-10-09T12:00:00.000Z",
       "createdAt": "2026-10-09T12:00:00.000Z",
       "type": "expense",
@@ -396,7 +527,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-20-2500000",
+      "id": "gsheet-tháng10-row21",
       "date": "2026-10-08T12:00:00.000Z",
       "createdAt": "2026-10-08T12:00:00.000Z",
       "type": "income",
@@ -411,7 +542,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-16-1000000",
+      "id": "gsheet-tháng10-row17",
       "date": "2026-10-07T12:00:00.000Z",
       "createdAt": "2026-10-07T12:00:00.000Z",
       "type": "income",
@@ -426,7 +557,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-17-377000",
+      "id": "gsheet-tháng10-row18",
       "date": "2026-10-07T12:00:00.000Z",
       "createdAt": "2026-10-07T12:00:00.000Z",
       "type": "expense",
@@ -440,7 +571,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-18-152000",
+      "id": "gsheet-tháng10-row19",
       "date": "2026-10-07T12:00:00.000Z",
       "createdAt": "2026-10-07T12:00:00.000Z",
       "type": "expense",
@@ -454,7 +585,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-19-3500000",
+      "id": "gsheet-tháng10-row20",
       "date": "2026-10-07T12:00:00.000Z",
       "createdAt": "2026-10-07T12:00:00.000Z",
       "type": "income",
@@ -469,7 +600,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-14-1000000",
+      "id": "gsheet-tháng10-row15",
       "date": "2026-10-06T12:00:00.000Z",
       "createdAt": "2026-10-06T12:00:00.000Z",
       "type": "income",
@@ -484,7 +615,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-15-1350000",
+      "id": "gsheet-tháng10-row16",
       "date": "2026-10-06T12:00:00.000Z",
       "createdAt": "2026-10-06T12:00:00.000Z",
       "type": "income",
@@ -499,7 +630,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-13-144000",
+      "id": "gsheet-tháng10-row14",
       "date": "2026-10-05T12:00:00.000Z",
       "createdAt": "2026-10-05T12:00:00.000Z",
       "type": "expense",
@@ -513,7 +644,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-12-600000",
+      "id": "gsheet-tháng10-row13",
       "date": "2026-10-04T12:00:00.000Z",
       "createdAt": "2026-10-04T12:00:00.000Z",
       "type": "expense",
@@ -527,7 +658,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-5-500000",
+      "id": "gsheet-tháng10-row6",
       "date": "2026-10-03T12:00:00.000Z",
       "createdAt": "2026-10-03T12:00:00.000Z",
       "type": "income",
@@ -542,7 +673,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-6-10411000",
+      "id": "gsheet-tháng10-row7",
       "date": "2026-10-03T12:00:00.000Z",
       "createdAt": "2026-10-03T12:00:00.000Z",
       "type": "income",
@@ -557,7 +688,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-11-500000",
+      "id": "gsheet-tháng10-row12",
       "date": "2026-10-03T12:00:00.000Z",
       "createdAt": "2026-10-03T12:00:00.000Z",
       "type": "expense",
@@ -571,7 +702,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-10-50000",
+      "id": "gsheet-tháng10-row11",
       "date": "2026-10-02T12:00:00.000Z",
       "createdAt": "2026-10-02T12:00:00.000Z",
       "type": "expense",
@@ -585,7 +716,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-4-90000",
+      "id": "gsheet-tháng10-row5",
       "date": "2026-10-01T12:00:00.000Z",
       "createdAt": "2026-10-01T12:00:00.000Z",
       "type": "expense",
@@ -599,7 +730,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-7-280000",
+      "id": "gsheet-tháng10-row8",
       "date": "2026-10-01T12:00:00.000Z",
       "createdAt": "2026-10-01T12:00:00.000Z",
       "type": "expense",
@@ -613,7 +744,7 @@
       "sheetTab": "tháng 10"
     },
     {
-      "id": "tx-gsheet-tháng10-8-18000000",
+      "id": "gsheet-tháng10-row9",
       "date": "2026-10-01T12:00:00.000Z",
       "createdAt": "2026-10-01T12:00:00.000Z",
       "type": "income",
